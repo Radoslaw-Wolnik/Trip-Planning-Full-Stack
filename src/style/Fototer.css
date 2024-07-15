@@ -1,0 +1,41 @@
+/* Footer.css */
+
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .column h4 {
+    margin: 5px 0;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .row p {
+    margin: 5px 0;
+  }
+  
+  .bottom {
+    background-color: #444;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .bottom .copyright {
+    font-size: 14px;
+  }
+  
+  .bottom .legal-links a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .bottom .legal-links a:hover {
+    text-decoration: underline;
+  }
+  
