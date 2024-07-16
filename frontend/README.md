@@ -109,3 +109,73 @@ https://blog.logrocket.com/create-responsive-navbar-react-css/
 docker-compose up --build
 docker run -p 3000:3000 frontend-app
 docker build -t frontend-app .
+
+---- runs
+npm run dev
+npm start
+When you run npm run dev locally for your frontend:
+
+    Development Environment: It uses the development server provided by react-scripts or any custom setup you have configured. This includes hot reloading and other development tools.
+
+    Isolation: It runs the frontend development server independently of any backend services unless your frontend makes API calls to a backend that's also running locally or in another environment.
+
+    If you're trying to run a development server for your frontend application using npm scripts, the command you typically use is npm run dev or npm start depending on how it's configured in your package.json file.
+Running npm run dev for Frontend
+
+Assuming you're inside the frontend directory of your project structure (main_folder/frontend), here's what you can do:
+
+    Navigate to the frontend directory:
+
+    Open your terminal or command prompt and change directory to your frontend directory:
+
+    sh
+
+cd path/to/main_folder/frontend
+
+Run the development server:
+
+Use npm run dev or npm start, depending on how your package.json is configured:
+
+sh
+
+npm run dev
+
+or
+
+sh
+
+    npm start
+
+        If you've configured npm run dev or npm start correctly in your package.json, this command will start the development server for your React application.
+
+    Accessing Your Application:
+
+    Once the development server starts, you can access your frontend application in a web browser:
+        Open a browser and go to http://localhost:3000 (assuming your React app runs on port 3000 by default).
+
+Differences from Docker Compose
+
+When you run npm run dev locally for your frontend:
+
+    Development Environment: It uses the development server provided by react-scripts or any custom setup you have configured. This includes hot reloading and other development tools.
+
+    Isolation: It runs the frontend development server independently of any backend services unless your frontend makes API calls to a backend that's also running locally or in another environment.
+
+Integrating with Docker Compose
+
+If you choose to run your frontend and backend services using Docker Compose (as previously discussed), you'll run the entire application stack (frontend, backend, and any other services) within Docker containers. This provides a more consistent and reproducible environment across different machines and deployments.
+
+Local Development: Running npm run dev or npm start locally in your frontend directory starts the development server for your React application.
+
+Docker Compose: Docker Compose orchestrates multiple containers (e.g., frontend, backend, database) together, providing a unified environment for development, testing, and deployment.
+
+docker-compose up --build
+docker-compose down
+
+Frontend: Open a web browser and go to http://localhost:3000 to see your React frontend.
+Backend: If your frontend makes API calls to the backend, ensure it uses http://backend:5001 (assuming backend is the service name defined in docker-compose.yml).
+
+
+Also !!
+Yes, before deploying your frontend application using Docker, it's generally a good practice to create a production build of your application using 
+npm run build
