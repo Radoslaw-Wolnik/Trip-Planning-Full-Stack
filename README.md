@@ -105,7 +105,7 @@ https://blog.logrocket.com/create-responsive-navbar-react-css/
 
 
 
------ Docker things ---- 
+-----
 docker-compose up --build
 docker run -p 3000:3000 frontend-app
 docker build -t frontend-app .
