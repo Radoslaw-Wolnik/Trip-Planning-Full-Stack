@@ -21,7 +21,7 @@ const LandingPageLayout: React.FC = () => {
           <Modal isModalOpen={isModalOpen} onClose={closeModal}>
             {modalContent}
           </Modal>
-        </section>;
+        </section>
       </div>
     )
   }

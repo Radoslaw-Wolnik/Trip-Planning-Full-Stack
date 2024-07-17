@@ -10,6 +10,12 @@ export default defineConfig({
   server: {
     host: true, // This makes the server accessible externally
     port: 5173, // Optional: specify the port
+    watch: {
+      usePolling: true,
+    },
+    hmr: {
+      overlay: true,
+    },
   }
 })
 
