@@ -109,3 +109,10 @@ https://blog.logrocket.com/create-responsive-navbar-react-css/
 docker-compose up --build
 docker run -p 3000:3000 frontend-app
 docker build -t frontend-app .
+
+for development:
+docker-compose -f docker-compose.yml up --build
+docker-compose up --build
+
+for production:
+docker-compose -f docker-compose.prod.yml up --build

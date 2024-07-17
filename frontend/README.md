@@ -179,3 +179,6 @@ Backend: If your frontend makes API calls to the backend, ensure it uses http://
 Also !!
 Yes, before deploying your frontend application using Docker, it's generally a good practice to create a production build of your application using 
 npm run build
+default build for vite is saved in diff folder then build - change in vite.config.ts
+
+153.4Mb build

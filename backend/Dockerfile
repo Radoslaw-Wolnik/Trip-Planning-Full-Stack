@@ -1,5 +1,6 @@
 # Use Node.js LTS version as base image
-FROM node:14
+# previously used 14
+FROM node:22
 
 # Set working directory inside the container
 WORKDIR /app
@@ -15,7 +16,7 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
-# Expose port 3000 (or any other required port)
+# Expose port 5000 (or any other required port)
 EXPOSE 5000
 
 # Command to run the app (development server)

@@ -4,15 +4,10 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: dev-stage
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    command: npm run dev
-    environment:
-      NODE_ENV: development
+      - "80:80"
+    depends_on:
+      - backend
 
   backend:
     build: ./backend

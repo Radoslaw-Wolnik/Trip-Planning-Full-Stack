@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const socketIo = require('socket.io');
-const { sequelize } = require('./models');
+const { sequelize } = require('.');
 
 const app = express();
 app.use(cors());
