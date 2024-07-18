@@ -116,3 +116,59 @@ docker-compose up --build
 
 for production:
 docker-compose -f docker-compose.prod.yml up --build
+
+
+Structure:
+my-fullstack-app/
+├── backend/
+│   ├── Dockerfile            # Docker file for backend
+│   ├── .gitignore            # gitgnore backend
+│   ├── package.json          # packages
+│   ├── package-lock.json
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── bin/
+│   │   │   └── www
+│   │   ├── public/
+│   │   │   ├── images/
+│   │   │   ├── javascripts/
+│   │   │   └── stylesheets/
+│   │   │       └── style.css
+│   │   ├── routes/
+│   │   │   ├── api/
+│   │   │   │   └── index.js    # API routes
+│   │   │   └── index.js        # Main router
+│   │   ├── models/             # Database models (if using an ORM)
+│   │   └── views/
+│   │       ├── error.pug
+│   │       ├── index.pug
+│   │       └── layout.pug
+│   ├── .env                    # Environment variables for backend
+│   └── README.md
+├── frontend/
+│   ├── .gitignore
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── public/
+│   │   ├── index.html          # Main HTML file for React
+│   │   └── ...
+│   ├── src/
+│   │   ├── index.js            # Entry point for React app
+│   │   ├── App.js              # Main component
+│   │   ├── assets/             # website assets - can be in public
+│   │   ├── components/         # React components
+│   │   ├── context/            
+│   │   ├── hooks/              
+│   │   ├── layouts/            
+│   │   ├── pages/              
+│   │   ├── services/           
+│   │   ├── styles/             # CSS or SCSS styles
+│   │   ├── utils/
+│   │   └── vite-env.d.ts       # vite enviorement settings
+│   ├── README.md
+│   └── Dockerfile              # Dockerfile for frontend
+├── .dockerignore               # global docker ignore 
+├── .gitgnore                   # global git ignore
+├── docker-compose-prod.yml     # docker compose for production
+├── docker-compose.yml          # docker compose for development
+└── README.md                   # main README.md
