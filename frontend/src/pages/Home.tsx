@@ -2,7 +2,11 @@
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className="home">
+      <p>Home home home</p>
+      <button>blhablah</button>
+    </div>
+    
   )
 }
 

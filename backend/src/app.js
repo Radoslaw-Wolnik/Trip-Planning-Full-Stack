@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const websiteRoutes = require('./routes/websiteRoutes');
 app.use('/api/data', websiteRoutes);
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
