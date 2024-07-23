@@ -172,3 +172,29 @@ my-fullstack-app/
 ├── docker-compose-prod.yml     # docker compose for production
 ├── docker-compose.yml          # docker compose for development
 └── README.md                   # main README.md
+
+
+
+frontend - client
+backend - server
+
+prev database postgress:
+    environment:
+      - DB_HOST=website1-db
+      - DB_USER=user1
+      - DB_PASS=password1
+      - DB_NAME=db1
+
+db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user1
+      POSTGRES_PASSWORD: password1
+      POSTGRES_DB: db1
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
