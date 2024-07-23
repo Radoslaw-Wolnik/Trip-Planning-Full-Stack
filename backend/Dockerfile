@@ -16,8 +16,7 @@ RUN npm ci
 # Copy the rest of the application files
 COPY . .
 
-# Expose port 5000 (or any other required port)
-EXPOSE 5000
+
 
 # Development stage
 FROM node:20 AS development
@@ -28,8 +27,8 @@ COPY --from=builder /app .
 COPY nodemon.json .
 COPY .env.development .env
 
-
-EXPOSE 3000
+# Expose port 5000 (or any other required port)
+EXPOSE 5000
 
 CMD ["npm", "run", "devstart"]
 
