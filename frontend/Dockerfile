@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22 AS build-stage
+FROM node:20 AS build-stage
 
 # Set working directory inside the container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Development stage
-FROM node:22 AS dev-stage
+FROM node:20 AS dev-stage
 
 # Set working directory inside the container
 WORKDIR /app
