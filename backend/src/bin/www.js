@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import app from './app.js';
+import app from '../app.js';
 import debugLib from 'debug';
 import http from 'http';
 import dotenv from 'dotenv';
