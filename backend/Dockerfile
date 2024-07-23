@@ -1,6 +1,6 @@
 # Use Node.js LTS version as base image
 # previously used 14
-FROM node:22
+FROM node:20 AS builder
 
 # Set working directory inside the container
 WORKDIR /app
@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 # Install dependencies production
 # RUN npm install --only=production
 
@@ -19,8 +19,33 @@ COPY . .
 # Expose port 5000 (or any other required port)
 EXPOSE 5000
 
-# Command to run the app (development server)
-CMD ["npm", "run", "dev"]
+# Development stage
+FROM node:20 AS development
 
-# Command to run the app production
-# CMD ["node", "index.js"]
+WORKDIR /app
+
+COPY --from=builder /app .
+COPY nodemon.json .
+COPY .env.development .env
+
+
+EXPOSE 3000
+
+CMD ["npm", "run", "devstart"]
+
+# Production stage
+FROM node:20-slim AS production
+
+WORKDIR /app
+
+COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /app/src ./src
+COPY .env.production .env
+
+EXPOSE 3000
+
+ENV NODE_ENV=production
+
+CMD ["npm", "run", "start"]
