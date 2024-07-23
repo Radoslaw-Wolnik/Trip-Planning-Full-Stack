@@ -1,39 +1,19 @@
-const { Sequelize, DataTypes } = require('sequelize');
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-/*
-const sequelize = new Sequelize('db1', 'user1', 'password1', {
-  host: 'website1-db',
-  dialect: 'postgres',
-});
-*/
+dotenv.config();
 
+const dbURI = `mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`;
 
-
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
-  {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-  }
-);
-
-
-const Website = sequelize.define('Website', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+mongoose.connect(dbURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  user: process.env.DB_USER,
+  pass: process.env.DB_PASS,
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('Error connecting to MongoDB:', err.message);
 });
 
-module.exports = { sequelize, Website };
+export default mongoose;

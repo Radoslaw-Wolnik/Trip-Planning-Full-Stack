@@ -2,9 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "serverstart": "SET DEBUG=express-locallibrary-tutorial:* & npm run devstart"
+    "start": "node ./src/bin/www.js",
+    "dev": "nodemon --legacy-watch ./src/bin/www.js",
+    "devstart": "SET DEBUG=express-locallibrary-tutorial:* & npm run dev",
+    "prod": "NODE_ENV=production node ./src/bin/www.js"
   },
   "keywords": [],
   "author": "",
@@ -12,14 +15,23 @@
   "description": "",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
     "express": "^4.19.2",
-    "pg": "^8.12.0",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^7.1.0",
+    
     "sequelize": "^6.37.3",
-    "cookie-parser": "~1.4.4",
     "http-errors": "~1.6.3",
+    "cookie-parser": "~1.4.4",
+
+    "pg": "^8.12.0",
+    "mongoose": "^8.5.1",
+    
     "debug": "~2.6.9",
-    "pug": "^3.0.3"
+    "dotenv": "^16.4.5",
+    "pug": "^3.0.3",
+
+    "morgan": "~1.9.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
