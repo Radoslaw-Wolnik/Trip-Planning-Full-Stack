@@ -22,17 +22,11 @@ services:
       - '5000:5000'
     depends_on:
       - mongo
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
-      - NODE_ENV=${NODE_ENV:-development}
-      - DB_HOST=mongo:27017
-      - DB_NAME=mydatabase
-      - DB_USER=myuser
-      - DB_PASS=mypassword
-      - JWT_SECRET=mysecret
+    env_file:
+      - ./backend/.env.development  # Path to the .env file
     volumes:
-      - ./src:/app/src:delegated
-      - ./nodemon.json:/app/nodemon.json
+      - ./backend/src:/app/src:delegated
+      - ./backend/nodemon.json:/app/nodemon.json
       - /app/node_modules
 
   mongo:
