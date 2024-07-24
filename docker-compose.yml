@@ -24,7 +24,6 @@ services:
       - mongo
     env_file:
       - ./backend/.env.development  # Path to the .env file
-      - ./backend.env.production
     volumes:
       - ./backend/src:/app/src:delegated
       - ./backend/nodemon.json:/app/nodemon.json
