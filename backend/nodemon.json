@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "js,json,pug",
     "ignore": ["src/public"],
-    "exec": "node ./src/bin/www.js"
+    "exec": "node ./src/server.js"
 }
