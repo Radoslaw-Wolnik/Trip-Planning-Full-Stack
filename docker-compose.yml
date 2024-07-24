@@ -24,6 +24,7 @@ services:
       - mongo
     env_file:
       - ./backend/.env.development  # Path to the .env file
+      - ./backend.env.production
     volumes:
       - ./backend/src:/app/src:delegated
       - ./backend/nodemon.json:/app/nodemon.json
@@ -35,12 +36,6 @@ services:
       - '27017:27017'
     env_file:
       - .env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-      - MONGO_INITDB_DATABASE=mydatabase
-      - MONGO_INITDB_USER=myuser
-      - MONGO_INITDB_PASSWORD=mypassword
     volumes:
       - mongo-data:/data/db
       - ./backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
