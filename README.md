@@ -213,3 +213,19 @@ Docker can sometimes cache layers, which might lead to outdated dependencies. Tr
 Starting with MongoDB 4.4, the mongo shell has been replaced by mongosh. If you have MongoDB Shell installed, you should use mongosh instead of mongo.
 > mongosh --host localhost --port 27017 -u myuser -p mypassword --authenticationDatabase mydatabase
 
+
+monodb populateDB.js:
+1. Ensure your MongoDB and backend services are running:
+2. run in new console [I]:
+> docker-compose exec backend node seed.js
+
+To check if it was succesfull:
+docker-compose exec mongo mongosh -u <your_username> -p <your_password>
+use <your_database_name>
+db.users.find()
+db.roadtrips.find()
+
+Also to make it esier i can add to scripts in package.json:
+"populate": "node populateDB.js"
+and run:
+> docker-compose exec backend npm run populate
