@@ -1,4 +1,4 @@
-// Create the admin user
+// Use environment variables for MongoDB initialization
 db = db.getSiblingDB('admin');
 db.createUser({
   user: process.env.MONGO_INITDB_ROOT_USERNAME,
