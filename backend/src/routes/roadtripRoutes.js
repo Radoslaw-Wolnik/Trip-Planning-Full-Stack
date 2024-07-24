@@ -1,21 +1,10 @@
+// src/routes/roadtripRoutes.js
+
 import express from 'express';
-import jwt from 'jsonwebtoken';
-import { Roadtrip } from '../index.js';
+import { Roadtrip } from '../models/Roadtrip.js';
+import authenticateToken from '../middleware/auth.js';
 
 const router = express.Router();
-
-// Middleware to authenticate JWT
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
 
 // Add a new roadtrip
 router.post('/', authenticateToken, async (req, res) => {

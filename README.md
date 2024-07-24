@@ -198,3 +198,12 @@ db:
 
 volumes:
   pgdata:
+
+
+Check for potential caching issues:
+Docker can sometimes cache layers, which might lead to outdated dependencies. Try rebuilding your images from scratch:
+> docker-compose build --no-cache
+> docker-compose up
+
+> docker-compose exec backend sh
+

@@ -1,13 +1,13 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node ./src/bin/www.js",
-    "dev": "nodemon --legacy-watch ./src/bin/www.js",
+    "start": "node ./src/server.js",
+    "dev": "nodemon --legacy-watch ./src/server.js",
     "devstart": "SET DEBUG=express-locallibrary-tutorial:* & npm run dev",
-    "prod": "NODE_ENV=production node ./src/bin/www.js"
+    "prod": "NODE_ENV=production node ./src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "express-async-handler": "^1.2.0",
     "express-validator": "^7.1.0",
     "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
     "morgan": "~1.9.1",
     "pug": "^3.0.3"
