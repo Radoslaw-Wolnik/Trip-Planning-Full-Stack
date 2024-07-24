@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "nodemon --legacy-watch ./src/server.js",
-    "devstart": "SET DEBUG=express-locallibrary-tutorial:* & npm run dev",
+    "devstart": "DEBUG=express-locallibrary-tutorial:* npm run dev",
     "prod": "NODE_ENV=production node ./src/server.js"
   },
   "keywords": [],
