@@ -122,56 +122,107 @@ Structure:
 my-fullstack-app/
 ├── backend/
 │   ├── Dockerfile            # Docker file for backend
-│   ├── .gitignore            # gitgnore backend
 │   ├── package.json          # packages
 │   ├── package-lock.json
+│   ├── .env                    # Environment variables for backend
+│   ├── Dockerfile
+│   ├── init-mongo.js
+│   ├── populateDB.js
+│   ├── node_modules/
+│   │   ├── ...
+│   │   └── ...
 │   ├── src/
 │   │   ├── app.js
+│   │   ├── server.js
 │   │   ├── bin/
-│   │   │   └── www
+│   │   │   └── www.js.reference
+│   │   ├── config/
+│   │   │   ├── enviorement.js
+│   │   │   └── databse.js
+│   │   ├── controllers/
+│   │   │   └── userController.js
 │   │   ├── public/
 │   │   │   ├── images/
 │   │   │   ├── javascripts/
 │   │   │   └── stylesheets/
 │   │   │       └── style.css
+│   │   ├── middleware
+│   │   │   └── auth.js
 │   │   ├── routes/
 │   │   │   ├── api/
 │   │   │   │   └── index.js    # API routes
-│   │   │   └── index.js        # Main router
+│   │   │   ├── userRouts.js
+│   │   │   └── roadtipRoutes.js
 │   │   ├── models/             # Database models (if using an ORM)
+│   │   │   ├── Roadtrip.js
+│   │   │   └── User.js
 │   │   └── views/
 │   │       ├── error.pug
 │   │       ├── index.pug
 │   │       └── layout.pug
-│   ├── .env                    # Environment variables for backend
 │   └── README.md
 ├── frontend/
-│   ├── .gitignore
 │   ├── package.json
 │   ├── package-lock.json
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts
+│   ├── build/
+│   │   ├── ...
+│   │   └── ...
+│   ├── node_modules/
+│   │   ├── ...
+│   │   └── ...
 │   ├── public/
-│   │   ├── index.html          # Main HTML file for React
+│   │   ├── index.html - should be here but its not
 │   │   └── ...
 │   ├── src/
-│   │   ├── index.js            # Entry point for React app
+│   │   ├── index.css
 │   │   ├── App.js              # Main component
+│   │   ├── main.tsx            
 │   │   ├── assets/             # website assets - can be in public
+│   │   │   ├── ...
+│   │   │   └── buy.json
 │   │   ├── components/         # React components
-│   │   ├── context/            
-│   │   ├── hooks/              
-│   │   ├── layouts/            
-│   │   ├── pages/              
-│   │   ├── services/           
+│   │   │   ├── ...
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   ├── Product.tsx
+│   │   │   ├── RecoveryPasswordForm.tsx
+│   │   │   └── SignUpForm.tsx
+│   │   ├── context/
+│   │   │   ├── ...
+│   │   │   └── ModalContext.tsx           
+│   │   ├── hooks/
+│   │   │   ├── ...
+│   │   │   └── useModal.ts           
+│   │   ├── layouts/
+│   │   │   └── LandingPageLayout.tsx           
+│   │   ├── pages/
+│   │   │   ├── ...
+│   │   │   ├── About.tsx
+│   │   │   ├── Profile.tsx
+│   │   │   ├── Settings.tsx
+│   │   │   ├── Friends.tsx
+│   │   │   ├── MainFunction.tsx
+│   │   │   └── Home.tsx            
+│   │   ├── services/
+│   │   │   └── apiService.ts          
 │   │   ├── styles/             # CSS or SCSS styles
 │   │   ├── utils/
+│   │   │   └── helpers.ts
 │   │   └── vite-env.d.ts       # vite enviorement settings
-│   ├── README.md
-│   └── Dockerfile              # Dockerfile for frontend
+│   └── README.md
 ├── .dockerignore               # global docker ignore 
 ├── .gitgnore                   # global git ignore
 ├── docker-compose-prod.yml     # docker compose for production
 ├── docker-compose.yml          # docker compose for development
-└── README.md                   # main README.md
+├── .env
+└── README.md
 
 
 

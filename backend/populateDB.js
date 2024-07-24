@@ -21,14 +21,14 @@ const populateDB = async () => {
     }
 
     const user = await User.create({
-      username: 'testuser',
-      password: 'testpassword',
+      username: 'testuser2',
+      password: 'testpassword2',
     });
     console.log('User created:', user);
 
     await Roadtrip.create({
       userId: user._id,
-      name: 'Test Roadtrip',
+      name: 'Test Roadtrip2',
       locations: ['Location1', 'Location2'],
     });
     console.log('Roadtrip created');
