@@ -1,7 +1,7 @@
 // src/routes/roadtripRoutes.js
 
 import express from 'express';
-import { Roadtrip } from '../models/Roadtrip.js';
+import Roadtrip from '../models/Roadtrip.js';
 import authenticateToken from '../middleware/auth.js';
 
 const router = express.Router();
