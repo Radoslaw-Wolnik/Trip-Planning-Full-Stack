@@ -38,7 +38,15 @@ services:
       - ./backend/src:/app/src:delegated
       - ./backend/nodemon.json:/app/nodemon.json
       - /app/node_modules
-    command: ["node", "seed.js"] # Run the seed script
+    
+  seed:
+    build:
+      context: ./backend
+    command: ["node", "seed.js"]
+    depends_on:
+      - mongo
+    env_file:
+      - ./backend/.env.development
 
 volumes:
   mongo-data:

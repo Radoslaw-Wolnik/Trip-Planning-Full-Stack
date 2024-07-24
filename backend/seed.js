@@ -1,39 +1,42 @@
 import mongoose from 'mongoose';
-import User from './src/models/User.js';
-import Roadtrip from './src/models/Roadtrip.js';
-import connectDB from './src/config/database.js';
-import env from './src/config/environment.js';
+import User from './src/models/User.js'; // Adjust path as needed
+import Roadtrip from './src/models/Roadtrip.js'; // Adjust path as needed
+import env from './src/config/environment.js'; // Adjust path as needed
 
 const seedDatabase = async () => {
   try {
-    await connectDB();
-
-    // Clear existing data
-    await User.deleteMany();
-    await Roadtrip.deleteMany();
-
-    // Create sample users
-    const user1 = await User.create({ username: 'user1', password: 'pass1' });
-    const user2 = await User.create({ username: 'user2', password: 'pass2' });
-
-    // Create sample roadtrips
-    await Roadtrip.create({
-      userId: user1._id,
-      name: 'Roadtrip 1',
-      locations: ['Location A', 'Location B']
+    // Connect to MongoDB
+    const dbURI = `mongodb://${env.DB_HOST}/${env.DB_NAME}`;
+    await mongoose.connect(dbURI, {
+      user: env.DB_USER,
+      pass: env.DB_PASS,
     });
+    console.log('Connected to MongoDB');
 
+    // Check if data already exists
+    const usersExist = await User.countDocuments() > 0;
+    if (usersExist) {
+      console.log('Database already seeded');
+      return;
+    }
+
+    // Seed data
+    const user = await User.create({
+      username: 'testuser',
+      password: 'testpassword', // You might want to hash passwords in real apps
+    });
+    
     await Roadtrip.create({
-      userId: user2._id,
-      name: 'Roadtrip 2',
-      locations: ['Location C', 'Location D']
+      userId: user._id,
+      name: 'Test Roadtrip',
+      locations: ['Location1', 'Location2'],
     });
 
     console.log('Database seeded successfully');
+    mongoose.disconnect();
   } catch (error) {
     console.error('Error seeding database:', error.message);
-  } finally {
-    mongoose.connection.close();
+    process.exit(1);
   }
 };
 
