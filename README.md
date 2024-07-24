@@ -208,3 +208,8 @@ Docker can sometimes cache layers, which might lead to outdated dependencies. Tr
 
 > docker-compose exec backend sh
 > docker-compose up --build
+
+
+Starting with MongoDB 4.4, the mongo shell has been replaced by mongosh. If you have MongoDB Shell installed, you should use mongosh instead of mongo.
+> mongosh --host localhost --port 27017 -u myuser -p mypassword --authenticationDatabase mydatabase
+

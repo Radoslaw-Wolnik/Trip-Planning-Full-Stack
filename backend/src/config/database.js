@@ -1,16 +1,13 @@
-// src/config/database.js
 import mongoose from 'mongoose';
 import env from './environment.js';
 
 // Function to connect to MongoDB
 const connectToMongoDB = async () => {
-  const dbURI = `mongodb://${env.DB_HOST}/${env.DB_NAME}`;
+  const dbURI = `mongodb://${env.DB_USER}:${env.DB_PASS}@${env.DB_HOST}/${env.DB_NAME}`;
   
   return mongoose.connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    user: env.DB_USER,
-    pass: env.DB_PASS,
   });
 };
 
