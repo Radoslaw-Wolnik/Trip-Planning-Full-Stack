@@ -206,4 +206,4 @@ Docker can sometimes cache layers, which might lead to outdated dependencies. Tr
 > docker-compose up
 
 > docker-compose exec backend sh
-
+> docker-compose up --build
