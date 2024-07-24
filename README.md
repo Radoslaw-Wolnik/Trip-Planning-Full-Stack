@@ -121,11 +121,9 @@ docker-compose -f docker-compose.prod.yml up --build
 Structure:
 my-fullstack-app/
 ├── backend/
-│   ├── Dockerfile            # Docker file for backend
-│   ├── package.json          # packages
-│   ├── package-lock.json
-│   ├── .env                    # Environment variables for backend
 │   ├── Dockerfile
+│   ├── package.json
+│   ├── package-lock.json
 │   ├── init-mongo.js
 │   ├── populateDB.js
 │   ├── node_modules/
