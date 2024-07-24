@@ -24,6 +24,7 @@ COPY --from=builder /app .
 # Copy additional development-specific configuration files
 COPY nodemon.json .
 COPY .env.development .env
+COPY ./seed.js ./seed.js
 
 # Reinstall node_modules to ensure compatibility
 RUN npm ci
