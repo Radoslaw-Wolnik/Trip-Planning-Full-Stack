@@ -202,8 +202,9 @@ volumes:
 
 Check for potential caching issues:
 Docker can sometimes cache layers, which might lead to outdated dependencies. Try rebuilding your images from scratch:
-> docker-compose build --no-cache
-> docker-compose up
+> docker-compose down -v             # removes all volumes
+> docker-compose build --no-cache    # build without cache
+> docker-compose up --force-recreate # force recreate
 
 > docker-compose exec backend sh
 > docker-compose up --build
