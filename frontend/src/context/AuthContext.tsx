@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await me();
       setUser(response.data);
-      console.log(response);
+      console.log('fetching data response:', response);
     } catch (error) {
       console.error('Error fetching user data:', error);
       // Handle error (e.g., redirect to login page)
@@ -41,9 +41,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       //const decodedToken = jwtDecode(response.data.token);
       //const userId = decodedToken.user.id;
       //console.log(userId);
-
+      console.log('login response', response);
       await fetchUserData();
-      console.log(response);
+      
     } catch (error) {
       console.error('Login error:', error);
       throw error;

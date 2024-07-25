@@ -11,6 +11,7 @@ export const register = async (req, res) => {
     // Check if user already exists
     let user = await User.findOne({ email });
     if (user) {
+      console.log('user exsists :o');
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -26,6 +27,8 @@ export const register = async (req, res) => {
     });
 
     await user.save();
+
+    console.log('user saved');
 
     // Create and return JWT token
     const payload = {
@@ -79,11 +82,16 @@ export const login = async (req, res) => {
 
 
 export const getUserProfile = async (req, res) => {
+  console.log("backend is trying");
+  console.log('data: ', req.user);
+
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
+      console.log('user not found ughhh');
       return res.status(404).json({ message: 'User not found' });
     }
+    console.log('user found:', user);
     res.json(user);
   } catch (error) {
     console.error('Error fetching user profile:', error);

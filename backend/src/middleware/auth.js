@@ -2,6 +2,7 @@
 
 import jwt from 'jsonwebtoken';
 
+
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -12,7 +13,8 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    // req.user = decoded previously
+    req.user =  { id: decoded.user.id }; // Ensure req.user has the correct user id;
     next();
   } catch (error) {
     return res.status(403).json({ message: 'Invalid token.' });
