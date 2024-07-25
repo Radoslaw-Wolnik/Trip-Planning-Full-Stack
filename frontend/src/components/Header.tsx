@@ -1,5 +1,5 @@
 // src/components/Header.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useModal } from '../hooks/useModal';
 import { useAuth } from '../hooks/useAuth';
@@ -14,6 +14,12 @@ import SignUpForm from './SignUpForm';
 const Header: React.FC = () => {
   const { openModal } = useModal();
   const { user, logout } = useAuth();
+  const [, setUpdate] = useState({});
+
+  useEffect(() => {
+    console.log(user);
+    setUpdate({});
+  }, [user]);
 
   const handleOpenLogin = () => {
     openModal(<LoginForm />);
