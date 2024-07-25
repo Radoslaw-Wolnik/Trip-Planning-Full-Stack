@@ -19,12 +19,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await login(credentials);
       localStorage.setItem('token', response.data.token);
       setUser(response.data.user);
+      console.log(response);
     } catch (error) {
       throw error;
     }
   };
 
   const registerUser = async (userData: { email: string; username: string; password: string }) => {
+    console.log(userData);
     try {
       const response = await register(userData);
       localStorage.setItem('token', response.data.token);

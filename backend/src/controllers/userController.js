@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import env from '../config/environment.js';
 
 export const register = async (req, res) => {
+  console.log('Register endpoint hit', req.body);
   try {
     const { username, email, password } = req.body;
 
@@ -38,7 +39,7 @@ export const register = async (req, res) => {
       res.json({ token });
     });
   } catch (error) {
-    console.error(error.message);
+    console.error('Server error during registration:', error);
     res.status(500).send('Server error');
   }
 };
