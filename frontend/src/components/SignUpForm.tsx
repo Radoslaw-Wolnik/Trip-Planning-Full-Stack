@@ -1,13 +1,13 @@
 // src/components/SignUpForm.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useModal } from '../hooks/useModal';
 
 const SignUpForm: React.FC = () => {
   const [userData, setUserData] = useState({email: '', username: '', password: '' });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+//  const navigate = useNavigate();
   const { register } = useAuth();
   const { closeModal } = useModal();
 
@@ -20,7 +20,7 @@ const SignUpForm: React.FC = () => {
     try {
       await register(userData);
       closeModal();
-      navigate('/trips'); // Redirect to trips page after successful registration
+//      navigate('/trips'); // Redirect to trips page after successful registration
     } catch (error) {
       setError('Registration failed. Please try again.');
     }

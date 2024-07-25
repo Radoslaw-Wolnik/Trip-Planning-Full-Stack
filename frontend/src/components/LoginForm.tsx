@@ -1,13 +1,13 @@
 // src/components/LoginForm.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useModal } from '../hooks/useModal';
 
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+//  const navigate = useNavigate();
   const { login } = useAuth();
   const { closeModal } = useModal();
 
@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
     try {
       await login(credentials);
       closeModal();
-      navigate('/trips'); // redirect to trips after succesfull login
+      //navigate('/trips'); // redirect to trips after succesfull login
     } catch (error) {
       setError('Invalid credentials. Please try again.');
     }

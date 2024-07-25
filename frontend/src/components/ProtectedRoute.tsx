@@ -1,5 +1,5 @@
 // src/components/ProtectedRoute.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useModal } from '../hooks/useModal';
 import LoginForm from './LoginForm';
@@ -11,12 +11,14 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user } = useAuth();
   const { openModal } = useModal();
-  
+  const hasOpenedModal = useRef(false);
+
   useEffect(() => {
-    if (!user) {
+    if (!user && !hasOpenedModal.current) {
       openModal(<LoginForm />);
+      hasOpenedModal.current = true;
     }
-  }, [user, openModal]);
+  }, [user]);
 
   if (!user) {
     // Return null or a loading indicator while waiting for the user to log in
