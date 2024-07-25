@@ -278,3 +278,4 @@ Also to make it esier i can add to scripts in package.json:
 "populate": "node populateDB.js"
 and run:
 > docker-compose exec backend npm run populate
+
