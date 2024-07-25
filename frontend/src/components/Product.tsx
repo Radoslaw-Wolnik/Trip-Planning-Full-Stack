@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 
 interface ProductDetails {
@@ -29,3 +30,4 @@ const Product: React.FC<ProductProps> = ( {Details} ) => {
 };
 
 export default Product;
+*/
