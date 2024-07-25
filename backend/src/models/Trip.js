@@ -7,7 +7,10 @@ const tripSchema = new mongoose.Schema({
   endDate: Date,
   places: [{
     name: String,
-    date: Date
+    date: Date,
+    latitude: Number,
+    longitude: Number,
+    order: Number
   }],
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
