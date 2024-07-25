@@ -1,7 +1,8 @@
 // frontend/src/services/api.ts
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL;
+//const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "http://localhost:5000/api";
 
 // Create an Axios instance with default settings
 const api: AxiosInstance = axios.create({
