@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useState, ReactNode } from 'react';
-import { login, register } from '../services/api';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import { login, register, me } from '../services/api';
+//import jwtDecode from 'jwt-decode';
 
 interface AuthContextProps {
   user: any | null;
@@ -14,13 +15,37 @@ export const AuthContext = createContext<AuthContextProps | undefined>(undefined
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchUserData();
+    }
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await me();
+      setUser(response.data);
+      console.log(response);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      // Handle error (e.g., redirect to login page)
+    }
+  };
+
   const loginUser = async (credentials: { email: string; password: string }) => {
     try {
       const response = await login(credentials);
       localStorage.setItem('token', response.data.token);
-      setUser(response.data.user);
+
+      //const decodedToken = jwtDecode(response.data.token);
+      //const userId = decodedToken.user.id;
+      //console.log(userId);
+
+      await fetchUserData();
       console.log(response);
     } catch (error) {
+      console.error('Login error:', error);
       throw error;
     }
   };
@@ -30,8 +55,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await register(userData);
       localStorage.setItem('token', response.data.token);
-      setUser(response.data.user);
+      await fetchUserData();
     } catch (error) {
+      console.error('Registration error:', error);
       throw error;
     }
   };

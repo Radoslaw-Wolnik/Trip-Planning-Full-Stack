@@ -76,4 +76,6 @@ export const joinTrip = (invitationCode: string) => api.post('/trips/join', { in
 export const getTrip = (id: string) => api.get(`/trips/${id}`);
 export const deleteTrip = (id: string) => api.delete(`/trips/${id}`);
 
+export const me = () => api.get('/api/users/me');
+
 export default api;
