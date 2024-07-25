@@ -9,16 +9,21 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { openModal } = useModal();
   const hasOpenedModal = useRef(false);
 
   useEffect(() => {
-    if (!user && !hasOpenedModal.current) {
+    if (!user && !loading && !hasOpenedModal.current) {
       openModal(<LoginForm />);
       hasOpenedModal.current = true;
     }
-  }, [user]);
+  }, [user, loading]);
+
+  if (loading) {
+    // Return a loading indicator while fetching user data
+    return <div>Loading...</div>;
+  }
 
   if (!user) {
     // Return null or a loading indicator while waiting for the user to log in

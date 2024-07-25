@@ -40,6 +40,9 @@ const Header: React.FC = () => {
       <Link to='/Main'>
         <h4>Main Function</h4>
       </Link>
+      <Link to='/trips'>
+        <h4>Trips</h4>
+      </Link>
       {user ? (
         <>
           <span>Welcome, {user.username}</span>
