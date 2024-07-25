@@ -9,8 +9,9 @@ dotenv.config();
 
 const app = express();
 
+// idk why but process.env.FRONTEND doesnt work but its not the most important thing
 app.use(cors({
-    origin: process.env.FORNTEND,
+    origin: 'http://localhost:5173',
     credentials: true,
   }));
 app.use(express.json());
