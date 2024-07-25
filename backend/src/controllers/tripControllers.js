@@ -1,6 +1,8 @@
 import Trip from '../models/Trip.js';
 import User from '../models/User.js';
+// it was an overkill to use crypto for invitation codes, insted we use helper function to generate them
 //import crypto from 'crypto';
+
 // Helper function to generate a random string
 const generateInvitationCode = (length = 6) => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -84,7 +86,6 @@ export const updateTrip = async (req, res) => {
       }
   
       if (!trip.invitationCode) {
-        // using crypto here is overkill
         //trip.invitationCode = crypto.randomBytes(6).toString('hex');
         trip.invitationCode = generateInvitationCode();
         await trip.save();
