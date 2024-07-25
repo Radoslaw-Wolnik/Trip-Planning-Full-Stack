@@ -1,10 +1,10 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import buy from '../assets/buy.json'
+// src/components/Header.tsx
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { useModal } from '../hooks/useModal';
+import { useAuth } from '../hooks/useAuth';
 import LoginForm from './LoginForm';
-import Product from './Product';
-
+import SignUpForm from './SignUpForm';
 
 //interface HeaderProps {
 //  openModal: (newContent: ModalContent) => void;
@@ -13,13 +13,14 @@ import Product from './Product';
 //const Header: React.FC<HeaderProps> = ({ openModal }) => {
 const Header: React.FC = () => {
   const { openModal } = useModal();
+  const { user, logout } = useAuth();
 
   const handleOpenLogin = () => {
     openModal(<LoginForm />);
   };
 
-  const handleOpenProduct = () => {
-    openModal(<Product Details={buy} />);
+  const handleOpenSignUp = () => {
+    openModal(<SignUpForm />);
   };
 
   return (
@@ -33,10 +34,19 @@ const Header: React.FC = () => {
       <Link to='/Main'>
         <h4>Main Function</h4>
       </Link>
-      <button onClick={handleOpenLogin}>Login</button>
-      <button onClick={handleOpenProduct}>Buy</button>
+      {user ? (
+        <>
+          <span>Welcome, {user.username}</span>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <>
+          <button onClick={handleOpenLogin}>Login</button>
+          <button onClick={handleOpenSignUp}>Sign Up</button>
+        </>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
