@@ -14,16 +14,15 @@ const Modal: React.FC<ModalProps> = ({ isModalOpen, onClose, children }) => {
     return null;
   }
   return (
-    <section className="modal">
-      <article className="modal-content p-lg-4">
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <button onClick={onClose}>Close</button>
         <div className="exit-icon text-end">
           <IoMdClose onClick={onClose} fill="black" />
         </div>
-        <main className="modal-mainContents">
-          {children}
-        </main>
-      </article>
-    </section>
+        {children}
+      </div>
+    </div>
   );
 };
 
