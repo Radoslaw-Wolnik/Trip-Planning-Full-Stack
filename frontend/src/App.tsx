@@ -1,40 +1,41 @@
 
-import { createBrowserRouter } from 'react-router-dom'
-import { RouterProvider } from 'react-router'
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import LandingPageLayout from './layouts/LandingPageLayout'
 
-import Home from './pages/Home'
-import About from './pages/About'
-import MainFunction from './pages/MainFunction'
+import Home from './pages/Home';
+import About from './pages/About';
+import MainFunction from './pages/MainFunction';
+
+import TripList from './pages/TripList';
+import TripDetail from './pages/TripDetail';
+
+import ProtectedRoute from './components/ProtectedRoute';
 
 import './style/All.css'
 import './style/Modal.css'
-
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <LandingPageLayout />,
     children: [
-      {
-        path: '/',
-        element: <Home />,
+      { path: '/', element: <Home /> },
+      { path: '/about', element: <About /> },
+      { path: '/main', element: <MainFunction /> },
+      { 
+        path: '/trips', 
+        element: <ProtectedRoute><TripList /></ProtectedRoute> 
       },
-      {
-        path: '/About',
-        element: <About />,
-      },
-      {
-        path: '/Main',
-        element: <MainFunction />,
+      { 
+        path: '/trip/:id', 
+        element: <ProtectedRoute><TripDetail /></ProtectedRoute> 
       },
     ],
   },
-])
+]);
 
-const App = () => { 
-
-  return ( <RouterProvider router={router} /> ) }
+const App: React.FC = () => <RouterProvider router={router} />;
 
 export default App;
