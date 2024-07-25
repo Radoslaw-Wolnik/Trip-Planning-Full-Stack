@@ -44,7 +44,10 @@ interface UserData {
 
 interface Place {
   name: string;
-  date: string; // ISO date string
+  date: Date;
+  latitude: number;
+  longitude: number;
+  order: number;
 }
 
 interface TripData {
@@ -58,15 +61,18 @@ interface TripData {
   invitationCode?: string;
 }
 
-interface ShareData {
-  userId: string;
-}
+// interface ShareData { userId: string; }
 
 export const login = (credentials: Credentials) => api.post('/users/login', credentials);
 export const register = (userData: UserData) => api.post('/users/register', userData);
 export const createTrip = (tripData: TripData) => api.post('/trips', tripData);
 export const getTrips = () => api.get('/trips');
 export const updateTrip = (id: string, tripData: TripData) => api.put(`/trips/${id}`, tripData);
-export const shareTrip = (id: string, userData: ShareData) => api.post(`/trips/${id}/share`, userData);
+
+//export const shareTrip = (id: string, userData: ShareData) => api.post(`/trips/${id}/share`, userData);
+export const shareTrip = (id: string, userData: { email: string }) => api.post(`/trips/${id}/share`, userData);
+export const joinTrip = (invitationCode: string) => api.post('/trips/join', { invitationCode });
+export const getTrip = (id: string) => api.get(`/trips/${id}`);
+export const deleteTrip = (id: string) => api.delete(`/trips/${id}`);
 
 export default api;
