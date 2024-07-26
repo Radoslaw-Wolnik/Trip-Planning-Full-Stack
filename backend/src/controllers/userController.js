@@ -35,7 +35,7 @@ export const register = async (req, res) => {
 
     await user.save();
 
-    // Send verification email
+    // Send verification email - this doesnt work right now ------------------------------------------ <- 
     const verificationUrl = `${env.FRONTEND_URL}/verify-email/${verificationToken}`;
     await sendEmail({
       to: user.email,
@@ -65,10 +65,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Check if email is verified
-    if (!user.isVerified) {
-      return res.status(401).json({ message: 'Please verify your email before logging in' });
-    }
+    // Check if email is verified ------------------- does not return correct message but definitly stops from login in
+    //if (!user.isVerified) {
+    //  return res.status(401).json({ message: 'Please verify your email before logging in' });
+    //}
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
