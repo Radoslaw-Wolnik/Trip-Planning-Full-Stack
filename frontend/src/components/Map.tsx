@@ -12,9 +12,10 @@ interface Place {
 
 interface MapProps {
   places: Place[];
+  onMapClick?: (lat: number, lng: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ places }) => {
+const Map: React.FC<MapProps> = ({ places, onMapClick }) => {
   const mapContainerStyle = {
     width: '100%',
     height: '400px'
@@ -24,7 +25,11 @@ const Map: React.FC<MapProps> = ({ places }) => {
     ? { lat: places[0].latitude, lng: places[0].longitude }
     : { lat: 0, lng: 0 };
 
-
+  const handleMapClick = (e: google.maps.MapMouseEvent) => {
+    if (onMapClick && e.latLng) {
+      onMapClick(e.latLng.lat(), e.latLng.lng());
+    }
+  };
 
   return (
     <LoadScript googleMapsApiKey={API_KEY}>
@@ -32,13 +37,14 @@ const Map: React.FC<MapProps> = ({ places }) => {
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={10}
+        onClick={handleMapClick}
       >
         {places.map((place, index) => (
           <Marker
             key={index}
             position={{ lat: place.latitude, lng: place.longitude }}
             label={`${index + 1}`}
-            title={`${place.name} - Day ${new Date(place.date).getDate()}`}
+            title={`${place.name} - ${new Date(place.date).toLocaleDateString()}`}
           />
         ))}
       </GoogleMap>

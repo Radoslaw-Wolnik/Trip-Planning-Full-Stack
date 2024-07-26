@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTrip, updateTrip } from '../services/api';
+import { getTrip, updateTrip, deleteTrip, generateShareLink } from '../services/api';
 import Map from '../components/Map';
-import ShareTripModal from '../components/ShareTrip';
+import ShareTrip from '../components/ShareTrip';
+import Modal from '../components/Modal';
 
 interface Place {
   name: string;
@@ -26,13 +27,20 @@ const TripDetail: React.FC = () => {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isMenuHidden, setIsMenuHidden] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [shareLink, setShareLink] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTrip = async () => {
-      if (id) {  // Add this check to resolve typescript error id might be of type: undefined
+      if (id) {
         try {
           const response = await getTrip(id);
           setTrip(response.data);
+          if (response.data.startDate) {
+            setSelectedDate(new Date(response.data.startDate));
+          }
         } catch (error) {
           console.error('Error fetching trip:', error);
         }
@@ -41,10 +49,7 @@ const TripDetail: React.FC = () => {
     fetchTrip();
   }, [id]);
 
-  const handleEdit = () => {
-    setIsEditMode(true);
-  };
-
+  const handleEdit = () => setIsEditMode(true);
   const handleSave = async () => {
     if (trip) {
       try {
@@ -57,70 +62,114 @@ const TripDetail: React.FC = () => {
     }
   };
 
-  const handleAddPlace = () => {
-    if (trip) {
+  const handleAddPlace = (lat: number, lng: number) => {
+    if (trip && selectedDate) {
       const newPlace: Place = {
-        name: '',
-        date: new Date(),
-        latitude: 0,
-        longitude: 0,
+        name: 'New Place',
+        date: selectedDate,
+        latitude: lat,
+        longitude: lng,
         order: trip.places.length + 1
       };
       setTrip({ ...trip, places: [...trip.places, newPlace] });
     }
   };
 
+  const handleDeletePlace = (index: number) => {
+    if (trip) {
+      const newPlaces = trip.places.filter((_, i) => i !== index);
+      setTrip({ ...trip, places: newPlaces });
+    }
+  };
+
+  const handleDeleteTrip = async () => {
+    if (trip && id) {
+      try {
+        await deleteTrip(id);
+        // Redirect to trip list or homepage after deletion
+        // history.push('/trips');
+      } catch (error) {
+        console.error('Error deleting trip:', error);
+      }
+    }
+  };
+
+  const groupPlacesByDate = () => {
+    if (!trip) return {};
+    return trip.places.reduce((acc, place) => {
+      const date = new Date(place.date).toDateString();
+      if (!acc[date]) acc[date] = [];
+      acc[date].push(place);
+      return acc;
+    }, {} as Record<string, Place[]>);
+  };
+
+  const handleGenerateShareLink = async () => {
+    if (trip) {
+      try {
+        const response = await generateShareLink(trip._id);
+        const shareCode = response.data.shareCode;
+        setShareLink(`${window.location.origin}/shared-trip/${shareCode}`);
+      } catch (error) {
+        console.error('Error generating share link:', error);
+      }
+    }
+  };
+
   if (!trip) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>{isEditMode ? <input value={trip.title} onChange={(e) => setTrip({ ...trip, title: e.target.value })} /> : trip.title}</h1>
-      <p>{isEditMode ? <textarea value={trip.description} onChange={(e) => setTrip({ ...trip, description: e.target.value })} /> : trip.description}</p>
-      <p>Start Date: {isEditMode ? <input type="date" value={trip.startDate} onChange={(e) => setTrip({ ...trip, startDate: e.target.value })} /> : new Date(trip.startDate).toLocaleDateString()}</p>
-      <p>End Date: {isEditMode ? <input type="date" value={trip.endDate} onChange={(e) => setTrip({ ...trip, endDate: e.target.value })} /> : new Date(trip.endDate).toLocaleDateString()}</p>
-      
-      <h2>Places</h2>
-      <ul>
-        {trip.places.map((place, index) => (
-          <li key={index}>
-            {isEditMode ? (
-              <>
-                <input value={place.name} onChange={(e) => {
-                  const newPlaces = [...trip.places];
-                  newPlaces[index].name = e.target.value;
-                  setTrip({ ...trip, places: newPlaces });
-                }} />
-                <input 
-                  type="date" 
-                  value={new Date(place.date).toISOString().slice(0, 10)} 
-                  onChange={(e) => {
-                    const newPlaces = [...trip.places];
-                    newPlaces[index].date = new Date(e.target.value);
-                    setTrip({ ...trip, places: newPlaces });
-                  }} 
-                />
-                <input type="number" value={place.latitude} onChange={(e) => {
-                  const newPlaces = [...trip.places];
-                  newPlaces[index].latitude = parseFloat(e.target.value);
-                  setTrip({ ...trip, places: newPlaces });
-                }} />
-                <input type="number" value={place.longitude} onChange={(e) => {
-                  const newPlaces = [...trip.places];
-                  newPlaces[index].longitude = parseFloat(e.target.value);
-                  setTrip({ ...trip, places: newPlaces });
-                }} />
-              </>
-            ) : (
-              <>
-                {place.name} - {new Date(place.date).toLocaleDateString()} ({place.latitude}, {place.longitude})
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
-      {isEditMode && <button onClick={handleAddPlace}>Add Place</button>}
+    <div className="trip-detail">
+      <h1>{trip.title}</h1>
+      <button onClick={() => setIsMenuHidden(!isMenuHidden)}>
+        {isMenuHidden ? 'Show Menu' : 'Hide Menu'}
+      </button>
+      <button onClick={() => setIsShareModalOpen(true)}>Share Trip</button>
 
-      <Map places={trip.places} />
+      <button onClick={handleGenerateShareLink}>Generate Share Link</button>
+      {shareLink && (
+        <div>
+          <p>Share this link with others:</p>
+          <input type="text" value={shareLink} readOnly />
+        </div>
+      )}
+      
+      <button onClick={() => setIsDeleteModalOpen(true)}>Delete Trip</button>
+
+      <div className="trip-content" style={{ display: 'flex' }}>
+        {!isMenuHidden && (
+          <div className="trip-menu" style={{ width: '300px' }}>
+            <h2>Itinerary</h2>
+            {Object.entries(groupPlacesByDate()).map(([date, places]) => (
+              <div key={date}>
+                <h3>{date}</h3>
+                <ul>
+                  {places.map((place, index) => (
+                    <li key={index}>
+                      {place.name}
+                      {isEditMode && (
+                        <button onClick={() => handleDeletePlace(index)}>Delete</button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="map-container" style={{ flex: 1 }}>
+          <input
+            type="date"
+            value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+            onChange={(e) => setSelectedDate(new Date(e.target.value))}
+          />
+          <Map
+            places={trip.places}
+            onMapClick={isEditMode ? handleAddPlace : undefined}
+          />
+        </div>
+      </div>
 
       {isEditMode ? (
         <button onClick={handleSave}>Save</button>
@@ -128,12 +177,20 @@ const TripDetail: React.FC = () => {
         <button onClick={handleEdit}>Edit</button>
       )}
 
-      <button onClick={() => setIsShareModalOpen(true)}>Share Trip</button>
-      <ShareTripModal
+      <ShareTrip
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
         tripId={trip._id}
       />
+
+      <Modal
+        isModalOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
+        <h2>Are you sure you want to delete this trip?</h2>
+        <button onClick={handleDeleteTrip}>Yes, delete</button>
+        <button onClick={() => setIsDeleteModalOpen(false)}>Cancel</button>
+      </Modal>
     </div>
   );
 };
