@@ -76,6 +76,17 @@ export const joinTrip = (invitationCode: string) => api.post('/trips/join', { in
 export const getTrip = (id: string) => api.get(`/trips/${id}`);
 export const deleteTrip = (id: string) => api.delete(`/trips/${id}`);
 
-export const me = () => api.get('/users/me');
+
+export const getMe = () => api.get('/users/me');
+export const getOtherUserProfile = (userId: string) => api.get(`/users/${userId}`);
+export const getUserTrips = (userId: string) => api.get(`/users/${userId}/trips`);
+export const updateUserProfile = (formData: FormData) => api.put('/users/upload-profile-picture', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const changePassword = (data: { currentPassword: string, newPassword: string }) => 
+  api.put('/users/change-password', data);
+export const sendVerificationEmail = () => api.post('/users/send-verification');
+export const verifyEmail = (token: string) => api.get(`/users/verify-email/${token}`);
+
 
 export default api;

@@ -10,6 +10,7 @@ import MainFunction from './pages/MainFunction';
 
 import TripList from './pages/TripList';
 import TripDetail from './pages/TripDetail';
+import Profile from './pages/Profile';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
         path: '/trip/:id', 
         element: <ProtectedRoute><TripDetail /></ProtectedRoute> 
       },
+      {
+        path: '/profile/:userId?',
+        element: <ProtectedRoute><Profile /></ProtectedRoute>
+      }
     ],
   },
 ]);
