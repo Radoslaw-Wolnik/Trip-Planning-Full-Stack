@@ -122,3 +122,18 @@ export const updateTrip = async (req, res) => {
       res.status(500).send('Server error');
     }
   };
+
+  export const getUserTrips = async (req, res) => {
+    try {
+      const trips = await Trip.find({ 
+        $or: [
+          { creator: req.params.userId },
+          { sharedWith: req.params.userId }
+        ]
+      });
+      res.json(trips);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Server error');
+    }
+  };
