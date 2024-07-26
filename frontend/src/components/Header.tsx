@@ -43,6 +43,9 @@ const Header: React.FC = () => {
       <Link to='/trips'>
         <h4>Trips</h4>
       </Link>
+      <Link to='/profile'>
+        <h4>My profile</h4>
+      </Link>
       {user ? (
         <>
           <span>Welcome, {user.username}</span>
