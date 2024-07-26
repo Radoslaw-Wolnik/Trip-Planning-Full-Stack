@@ -1,6 +1,7 @@
 // src/routes/tripRoutes.js
-
 import express from 'express';
+import authenticateToken from '../middleware/auth.js';
+// import auth from '../middleware/auth.js';
 import { 
     createTrip, 
     getTrips, 
@@ -10,17 +11,16 @@ import {
     generateShareLink, 
     getSharedTrip 
 } from '../controllers/tripController.js';
-import auth from '../middleware/auth.js';
+
 
 const router = express.Router();
 
-router.post('/', auth, createTrip);
-router.get('/', auth, getTrips);
+router.post('/', authenticateToken, createTrip);
+router.get('/', authenticateToken, getTrips);
 // router.get('/:id', authenticateToken, getTrip);
-router.put('/:id', auth, updateTrip);
-router.post('/:id/share', auth, shareTrip);
-router.post('/join', auth, joinTrip);
-
+router.put('/:id', authenticateToken, updateTrip);
+router.post('/:id/share', authenticateToken, shareTrip);
+router.post('/join', authenticateToken, joinTrip);
 // router.delete('/:id', authenticateToken, deleteTrip);
 
 router.post('/:id/share', authenticateToken, generateShareLink);
