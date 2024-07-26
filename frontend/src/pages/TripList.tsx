@@ -15,6 +15,9 @@ const TripList: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const navigate = useNavigate();
   const { isModalOpen, openModal, closeModal, modalContent } = useModal();
+  const [newTripTitle, setNewTripTitle] = useState('');
+  const [newTripStartDate, setNewTripStartDate] = useState('');
+  const [newTripEndDate, setNewTripEndDate] = useState('');
 
   const fetchTrips = async () => {
     try {
@@ -29,15 +32,42 @@ const TripList: React.FC = () => {
     fetchTrips();
   }, []);
 
-  const handleCreateNewTrip = async () => {
+  const handleCreateNewTrip = () => {
+    openModal(
+      <div>
+        <h2>Create New Trip</h2>
+        <input
+          type="text"
+          placeholder="Trip Title"
+          value={newTripTitle}
+          onChange={(e) => setNewTripTitle(e.target.value)}
+        />
+        <input
+          type="date"
+          value={newTripStartDate}
+          onChange={(e) => setNewTripStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          value={newTripEndDate}
+          onChange={(e) => setNewTripEndDate(e.target.value)}
+        />
+        <button onClick={confirmCreateTrip}>Create</button>
+        <button onClick={closeModal}>Cancel</button>
+      </div>
+    );
+  };
+
+  const confirmCreateTrip = async () => {
     try {
       const newTrip = {
-        title: 'New Trip',
-        startDate: new Date().toISOString(),
-        endDate: new Date().toISOString(),
+        title: newTripTitle,
+        startDate: newTripStartDate,
+        endDate: newTripEndDate,
       };
       const response = await createTrip(newTrip);
-      await fetchTrips(); // Refresh the list
+      await fetchTrips();
+      closeModal();
       navigate(`/trip/${response.data._id}`);
     } catch (error) {
       console.error('Error creating new trip:', error);
@@ -57,13 +87,12 @@ const TripList: React.FC = () => {
   const confirmDeleteTrip = async (tripId: string) => {
     try {
       await deleteTrip(tripId);
-      await fetchTrips(); // Refresh the list
+      await fetchTrips();
       closeModal();
     } catch (error) {
       console.error('Error deleting trip:', error);
     }
   };
-
 
   return (
     <div>
