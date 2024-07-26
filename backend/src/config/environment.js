@@ -11,5 +11,11 @@ export default {
   JWT_SECRET: process.env.JWT_SECRET,
   PORT: process.env.PORT || 5000,
   NODE_ENV: process.env.NODE_ENV || 'development',
-  FRONTEND: process.env.FORNTEND || 'http://localhost:5173'
+  FRONTEND: process.env.FORNTEND || 'http://localhost:5173',
+
+  EMAIL_HOST: 'smtp-relay.brevo.com',
+  EMAIL_PORT: 587,
+  EMAIL_USER: '795ccf001@smtp-brevo.com',
+  EMAIL_PASS: 'HPtac1DbV8wvsWZk',
+  EMAIL_FROM: 'noreply@devdomain.com'
 };
