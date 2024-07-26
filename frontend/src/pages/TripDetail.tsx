@@ -124,9 +124,9 @@ const TripDetail: React.FC = () => {
       <button onClick={() => setIsMenuHidden(!isMenuHidden)}>
         {isMenuHidden ? 'Show Menu' : 'Hide Menu'}
       </button>
-      <button onClick={() => setIsShareModalOpen(true)}>Share Trip</button>
+      <button onClick={() => setIsShareModalOpen(true)}>Invite to edit</button>
 
-      <button onClick={handleGenerateShareLink}>Generate Share Link</button>
+      <button onClick={handleGenerateShareLink}>Generate Share Link (view only)</button>
       {shareLink && (
         <div>
           <p>Share this link with others:</p>
