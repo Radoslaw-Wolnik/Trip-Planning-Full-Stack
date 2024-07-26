@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getTrips, createTrip, deleteTrip } from '../services/api';
 import { useModal } from '../hooks/useModal';
 import Modal from '../components/Modal';
+import CreateTripForm from '../components/CreateTripForm';
 
 interface Trip {
   _id: string;
@@ -16,9 +17,6 @@ const TripList: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const navigate = useNavigate();
   const { isModalOpen, openModal, closeModal, modalContent } = useModal();
-  const [newTripTitle, setNewTripTitle] = useState('');
-  const [newTripStartDate, setNewTripStartDate] = useState('');
-  const [newTripEndDate, setNewTripEndDate] = useState('');
 
   const fetchTrips = async () => {
     try {
@@ -35,37 +33,15 @@ const TripList: React.FC = () => {
 
   const handleCreateNewTrip = () => {
     openModal(
-      <div>
-        <h2>Create New Trip</h2>
-        <input
-          type="text"
-          placeholder="Trip Title"
-          value={newTripTitle}
-          onChange={(e) => setNewTripTitle(e.target.value)}
-        />
-        <input
-          type="date"
-          value={newTripStartDate}
-          onChange={(e) => setNewTripStartDate(e.target.value)}
-        />
-        <input
-          type="date"
-          value={newTripEndDate}
-          onChange={(e) => setNewTripEndDate(e.target.value)}
-        />
-        <button onClick={confirmCreateTrip}>Create</button>
-        <button onClick={closeModal}>Cancel</button>
-      </div>
+      <CreateTripForm
+        onSubmit={confirmCreateTrip}
+        onCancel={closeModal}
+      />
     );
   };
 
-  const confirmCreateTrip = async () => {
+  const confirmCreateTrip = async (newTrip: { title: string; startDate: string; endDate: string }) => {
     try {
-      const newTrip = {
-        title: newTripTitle,
-        startDate: newTripStartDate,
-        endDate: newTripEndDate,
-      };
       const response = await createTrip(newTrip);
       await fetchTrips();
       closeModal();
