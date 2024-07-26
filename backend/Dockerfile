@@ -25,6 +25,9 @@ COPY --from=builder /app .
 COPY nodemon.json .
 COPY .env.development .env
 
+# make uploads dir in development setup
+RUN mkdir -p /app/uploads
+
 # Reinstall node_modules to ensure compatibility
 RUN npm ci
 
@@ -50,6 +53,9 @@ COPY --from=builder /app/src ./src
 
 # Copy production environment configuration
 COPY .env.production .env
+
+# make uploads dir in production
+RUN mkdir -p /app/uploads
 
 # Expose port 3000 for production
 EXPOSE 3000
