@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTrip, updateTrip, deleteTrip, generateShareLink } from '../services/api';
+import { getTripDetails, updateTrip, deleteTrip, generateShareLink } from '../services/api';
 import Map from '../components/Map';
 import ShareTrip from '../components/ShareTrip';
 import Modal from '../components/Modal';
@@ -36,7 +36,7 @@ const TripDetail: React.FC = () => {
     const fetchTrip = async () => {
       if (id) {
         try {
-          const response = await getTrip(id);
+          const response = await getTripDetails(id);
           setTrip(response.data);
           if (response.data.startDate) {
             setSelectedDate(new Date(response.data.startDate));

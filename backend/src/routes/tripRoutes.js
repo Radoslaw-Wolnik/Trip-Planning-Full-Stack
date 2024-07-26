@@ -8,8 +8,10 @@ import {
     updateTrip, 
     shareTrip, 
     joinTrip, 
+    deleteTrip,
     generateShareLink, 
-    getSharedTrip 
+    getSharedTrip,
+    getTripDetails 
 } from '../controllers/tripController.js';
 
 
@@ -17,13 +19,16 @@ const router = express.Router();
 
 router.post('/', authenticateToken, createTrip);
 router.get('/', authenticateToken, getTrips);
-// router.get('/:id', authenticateToken, getTrip);
-router.put('/:id', authenticateToken, updateTrip);
-router.post('/:id/share', authenticateToken, shareTrip);
-router.post('/join', authenticateToken, joinTrip);
-// router.delete('/:id', authenticateToken, deleteTrip);
 
+router.get('/:id', authenticateToken, getTripDetails);
+router.put('/:id', authenticateToken, updateTrip);
+router.delete('/:id', authenticateToken, deleteTrip);
+
+router.post('/join', authenticateToken, joinTrip);
+
+router.post('/:id/invite', authenticateToken, shareTrip);
 router.post('/:id/share', authenticateToken, generateShareLink);
+
 router.get('/shared/:shareCode', getSharedTrip);
 
 export default router;

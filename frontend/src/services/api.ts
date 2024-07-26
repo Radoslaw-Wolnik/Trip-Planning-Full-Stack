@@ -71,9 +71,9 @@ export const getTrips = () => api.get('/trips');
 export const updateTrip = (id: string, tripData: TripData) => api.put(`/trips/${id}`, tripData);
 
 //export const shareTrip = (id: string, userData: ShareData) => api.post(`/trips/${id}/share`, userData);
-export const shareTrip = (id: string, userData: { email: string }) => api.post(`/trips/${id}/share`, userData);
+export const shareTrip = (id: string, userData: { email: string }) => api.post(`/trips/${id}/invite`, userData);
 export const joinTrip = (invitationCode: string) => api.post('/trips/join', { invitationCode });
-export const getTrip = (id: string) => api.get(`/trips/${id}`);
+export const getTripDetails = (id: string) => api.get(`/trips/${id}`);
 export const deleteTrip = (id: string) => api.delete(`/trips/${id}`);
 
 
