@@ -1,17 +1,8 @@
 import Trip from '../models/Trip.js';
 import User from '../models/User.js';
 // it was an overkill to use crypto for invitation codes, insted we use helper function to generate them
-//import crypto from 'crypto';
-
-// Helper function to generate a random string
-const generateInvitationCode = (length = 6) => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
+import crypto from 'crypto';
+import { generateInvitationCode } from '../utils/generateInvitationCode.js';
 
 
 export const createTrip = async (req, res) => {
@@ -135,5 +126,50 @@ export const updateTrip = async (req, res) => {
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server error');
+    }
+  };
+
+  export const generateShareLink = async (req, res) => {
+    try {
+      const trip = await Trip.findById(req.params.id);
+      if (!trip) {
+        return res.status(404).json({ message: 'Trip not found' });
+      }
+  
+      if (!trip.shareCode) {
+        // it can be implemented in diff way, if u want then a helper function can be declared in utils
+        // like generateInvitationCode
+        trip.shareCode = crypto.randomBytes(4).toString('hex'); 
+        await trip.save();
+      }
+  
+      res.json({ shareCode: trip.shareCode });
+    } catch (error) {
+      console.error('Error generating share link:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
+  export const getSharedTrip = async (req, res) => {
+    try {
+      const trip = await Trip.findOne({ shareCode: req.params.shareCode });
+      if (!trip) {
+        return res.status(404).json({ message: 'Shared trip not found' });
+      }
+  
+      // Omit sensitive information
+      const sharedTripData = {
+        _id: trip._id,
+        title: trip.title,
+        description: trip.description,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+        places: trip.places
+      };
+  
+      res.json(sharedTripData);
+    } catch (error) {
+      console.error('Error fetching shared trip:', error);
+      res.status(500).json({ message: 'Server error' });
     }
   };

@@ -14,7 +14,8 @@ const tripSchema = new mongoose.Schema({
   }],
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  invitationCode: String
+  invitationCode: String,
+  shareCode: { type: String, unique: true, sparse: true }
 });
 
 export default mongoose.model('Trip', tripSchema);

@@ -88,5 +88,9 @@ export const changePassword = (data: { currentPassword: string, newPassword: str
 export const sendVerificationEmail = () => api.post('/users/send-verification');
 export const verifyEmail = (token: string) => api.get(`/users/verify-email/${token}`);
 
+export const generateShareLink = (tripId: string) => api.post(`/trips/${tripId}/share`);
+export const getSharedTrip = (shareCode: string) => api.get(`/trips/shared/${shareCode}`);
+
+
 
 export default api;

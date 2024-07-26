@@ -11,6 +11,7 @@ import MainFunction from './pages/MainFunction';
 import TripList from './pages/TripList';
 import TripDetail from './pages/TripDetail';
 import Profile from './pages/Profile';
+import SharedTripView from './pages/SharedTripView';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       { 
         path: '/trip/:id', 
         element: <ProtectedRoute><TripDetail /></ProtectedRoute> 
+      },
+      { 
+        path: '/shared-trip/:shareCode', 
+        element: <SharedTripView /> 
       },
       {
         path: '/profile/:userId?',
