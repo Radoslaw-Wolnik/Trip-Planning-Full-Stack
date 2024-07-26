@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getTrips, createTrip, deleteTrip } from '../services/api';
 import { useModal } from '../hooks/useModal';
 import Modal from '../components/Modal';
@@ -9,6 +9,7 @@ interface Trip {
   title: string;
   startDate: string;
   endDate: string;
+  sharedWith: { _id: string; username: string; profilePicture?: string }[];
 }
 
 const TripList: React.FC = () => {
@@ -100,8 +101,20 @@ const TripList: React.FC = () => {
       <ul>
         {trips.map((trip) => (
           <li key={trip._id}>
-            <Link to={`/trip/${trip._id}`}>{trip.title}</Link>
+            <span onClick={() => navigate(`/trip/${trip._id}`)}>{trip.title}</span>
             <p>{new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}</p>
+            <div className="shared-users">
+              {trip.sharedWith.map((user) => (
+                <img
+                  key={user._id}
+                  src={user.profilePicture || '/default-profile.png'}
+                  alt={user.username}
+                  title={user.username}
+                  onClick={() => navigate(`/profile/${user._id}`)}
+                  style={{ width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', marginRight: '5px' }}
+                />
+              ))}
+            </div>
             <button onClick={() => handleDeleteTrip(trip._id)}>Delete</button>
           </li>
         ))}
