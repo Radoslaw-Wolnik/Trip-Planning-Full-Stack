@@ -1,6 +1,6 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { login, register, me } from '../services/api';
+import { login, register, getMe } from '../services/api';
 //import jwtDecode from 'jwt-decode';
 
 interface AuthContextProps {
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUserData = async () => {
     try {
-      const response = await me();
+      const response = await getMe();
       setUser(response.data);
       console.log('fetching data response:', response);
     } catch (error) {
