@@ -138,14 +138,6 @@ const Profile: React.FC = () => {
   
         <h2>Trips</h2>
         <TripList userId={userId || currentUser._id} trips={trips} />
-        <ul>
-          {trips.map((trip) => (
-            <li key={trip._id}>
-              <span>{trip.title}</span>
-              <p>{new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}</p>
-            </li>
-          ))}
-        </ul>
       </div>
     );
   };
