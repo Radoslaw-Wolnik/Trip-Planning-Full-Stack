@@ -116,16 +116,20 @@ export const joinTrip = async (req, res) => {
 
 export const getUserTrips = async (req, res) => {
   try {
-    const trips = await Trip.find({ 
+    const userId = req.params.userId || req.user.id;
+
+    const trips = await Trip.find({
       $or: [
-        { creator: req.params.userId },
-        { sharedWith: req.params.userId }
+        { creator: userId },
+        { sharedWith: userId }
       ]
-    });
+    }).populate('creator', 'username profilePicture')
+      .populate('sharedWith', 'username profilePicture');
+
     res.json(trips);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server error');
+    console.error('Error fetching user trips:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
