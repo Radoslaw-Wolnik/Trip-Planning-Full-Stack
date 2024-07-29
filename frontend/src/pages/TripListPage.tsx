@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTrips, createTrip, deleteTrip } from '../services/api';
+import { createTrip, deleteTrip, getUserTrips } from '../services/api';
 import { useModal } from '../hooks/useModal';
 import Modal from '../components/Modal';
 import CreateTripForm from '../components/CreateTripForm';
 import TripList from '../components/TripList';
+import { useAuth } from '../hooks/useAuth';
 
 
 interface User {
@@ -26,10 +27,12 @@ const TripListPage: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const navigate = useNavigate();
   const { isModalOpen, openModal, closeModal, modalContent } = useModal();
+  const { user } = useAuth();
 
   const fetchTrips = async () => {
     try {
-      const response = await getTrips();
+      //const response = await getTrips();
+      const response = await getUserTrips(user._id)
       setTrips(response.data);
     } catch (error) {
       console.error('Error fetching trips:', error);
@@ -83,7 +86,7 @@ const TripListPage: React.FC = () => {
   return (
     <div>
       <h1>My Trips</h1>
-      <TripList trips={trips} onDeleteTrip={handleDeleteTrip} />
+      <TripList userId={user._id} trips={trips} onDeleteTrip={handleDeleteTrip} />
 
       <button onClick={handleCreateNewTrip}>Create New Trip</button>
       <Modal isModalOpen={isModalOpen} onClose={closeModal}>

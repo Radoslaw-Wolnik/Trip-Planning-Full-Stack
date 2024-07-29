@@ -1,8 +1,7 @@
 // src/components/TripList.tsx
 // used style for avatars !!
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
 
 interface User {
   _id: string;
@@ -20,13 +19,12 @@ interface Trip {
 }
 
 interface TripListProps {
+  userId: string,
   trips: Trip[];
   onDeleteTrip?: (tripId: string) => void;
 }
 
-const TripList: React.FC<TripListProps> = ({ trips, onDeleteTrip }) => {
-  const { user: currentUser } = useContext(AuthContext)!;
-  const userId = currentUser._id;
+const TripList: React.FC<TripListProps> = ({ userId, trips, onDeleteTrip }) => {
   
   return (
     <div className="trip-list">

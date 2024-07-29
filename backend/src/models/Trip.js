@@ -12,7 +12,7 @@ const tripSchema = new mongoose.Schema({
     longitude: Number,
     order: Number
   }],
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   invitationCode: String,
   shareCode: { type: String, unique: true, sparse: true }
