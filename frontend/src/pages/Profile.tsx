@@ -2,7 +2,23 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getMe, getOtherUserProfile, getUserTrips, updateUserProfile, changePassword, sendVerificationEmail } from '../services/api';
+import TripList from '../components/TripList';
 
+
+interface User {
+  _id: string;
+  username: string;
+  profilePicture?: string;
+}
+
+interface Trip {
+  _id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  creator: User;
+  sharedWith: User[];
+}
 
 const Profile: React.FC = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -10,7 +26,7 @@ const Profile: React.FC = () => {
     const navigate = useNavigate();
   
     const [user, setUser] = useState<any>(null);
-    const [trips, setTrips] = useState<any[]>([]);
+    const [trips, setTrips] = useState<Trip[]>([]);
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [newPassword, setNewPassword] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
@@ -135,6 +151,7 @@ const Profile: React.FC = () => {
         )}
   
         <h2>Trips</h2>
+        <TripList trips={trips} />
         <ul>
           {trips.map((trip) => (
             <li key={trip._id}>

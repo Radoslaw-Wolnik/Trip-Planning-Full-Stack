@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import MainFunction from './pages/MainFunction';
 
-import TripList from './pages/TripList';
+import TripList from './pages/TripListPage';
 import TripDetail from './pages/TripDetail';
 import Profile from './pages/Profile';
 import SharedTripView from './pages/SharedTripView';
