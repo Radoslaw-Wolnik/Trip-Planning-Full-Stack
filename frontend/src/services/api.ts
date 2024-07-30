@@ -81,6 +81,9 @@ typedApi.interceptors.response.use(
 export const login = (credentials: Credentials): Promise<AxiosResponse<{ token: string; user: User }>> => 
   typedApi.post('/users/login', credentials);
 
+export const logout = (): Promise<AxiosResponse<void>> => 
+  typedApi.post('/logout');
+
 export const register = (userData: UserData): Promise<AxiosResponse<User>> => 
   typedApi.post('/users/register', userData);
 

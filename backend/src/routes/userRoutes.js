@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, getUserProfile, uploadProfilePicture, changePassword, sendVerificationEmail, verifyEmail, getOtherUserProfile } from '../controllers/userController.js';
+import { register, login, logout, getUserProfile, uploadProfilePicture, changePassword, sendVerificationEmail, verifyEmail, getOtherUserProfile } from '../controllers/userController.js';
 import { getUserTrips } from '../controllers/tripController.js';
 import authenticateToken from '../middleware/auth.js';
 import upload from '../middleware/upload.js';
@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/logout', authenticateToken, logout);
 
 // it first executes authenticateToken then getUserProfile so in auth we decode the token to id of user
 router.get('/me', authenticateToken, getUserProfile);
