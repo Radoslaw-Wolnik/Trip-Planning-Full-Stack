@@ -53,6 +53,7 @@ const Header: React.FC = () => {
             src={getFullImageUrl(user.profilePicture)} 
             alt={user.username} 
             className="header-profile-picture"
+            style={{ width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', marginRight: '5px' }}
           />
           <span>Welcome, {user.username}</span>
           <button onClick={logout}>Logout</button>
