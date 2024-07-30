@@ -7,6 +7,8 @@ import crypto from 'crypto';
 import sendEmail from '../utils/sendEmail.js';
 import extractToken from '../utils/tokenExtractor.js';
 
+import RevokedToken from '../models/RevokedToken.js';
+
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -112,7 +114,7 @@ export const logout = async (req, res) => {
       token: token,
       expiresAt: new Date(decodedToken.exp * 1000)
     });
-
+    //console.log("Succes at revoking the token");
     res.status(200).json({ message: 'Logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);

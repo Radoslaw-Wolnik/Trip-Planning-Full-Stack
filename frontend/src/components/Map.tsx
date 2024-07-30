@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
+// the problem was using MArkers with react in Strict mode doesnt work insted usage of MarkerF
 import { Place } from '../types';
 
 // API Key should be securely handled
