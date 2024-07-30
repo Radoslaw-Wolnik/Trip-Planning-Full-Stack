@@ -20,18 +20,14 @@ const Map: React.FC<MapProps> = ({ places, onMapClick }) => {
     googleMapsApiKey: API_KEY,
   });
 
-  // Memoize values
-  const center = useMemo(() => {
-    if (places.length === 0) {
-      return { lat: 0, lng: 0 };
-    }
-    const firstPlace = places[0];
-    return {
-      lat: firstPlace.latitude ?? 0,
-      lng: firstPlace.longitude ?? 0,
-    };
-  }, [places]);
+ // Memoize the center of the map
+ const center = useMemo(() => {
+  if (places.length === 0) return { lat: 0, lng: 0 };
+  const { latitude = 0, longitude = 0 } = places[0];
+  return { lat: latitude, lng: longitude };
+}, [places]);
 
+  /*
   const markers = useMemo(() => {
     console.log('places memo render', places);
     return places.map((place) => ({
@@ -39,6 +35,27 @@ const Map: React.FC<MapProps> = ({ places, onMapClick }) => {
       position: { lat: place.latitude ?? 0, lng: place.longitude ?? 0 },
       label: `${place.order}`,
     }));
+  }, [places]);
+*/
+
+  // State to hold markers, including their order
+  const [markers, setMarkers] = useState(() => 
+    places.map((place) => ({
+      key: `${place.latitude}-${place.longitude}`,
+      position: { lat: place.latitude ?? 0, lng: place.longitude ?? 0 },
+      label: `${place.order}`,
+    }))
+  );
+
+  // Update markers when places change
+  useEffect(() => {
+    setMarkers(
+      places.map((place) => ({
+        key: `${place.latitude}-${place.longitude}`,
+        position: { lat: place.latitude ?? 0, lng: place.longitude ?? 0 },
+        label: `${place.order}`,
+      }))
+    );
   }, [places]);
 
   // Handle loading and error state
