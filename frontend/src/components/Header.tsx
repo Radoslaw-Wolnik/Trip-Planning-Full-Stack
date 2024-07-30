@@ -50,7 +50,7 @@ const Header: React.FC = () => {
       {user ? (
         <div className="user-info">
           <img 
-            src={ user.profilePicture? getFullImageUrl(user.profilePicture) : '/default-profile.png'} 
+            src={getFullImageUrl(user.profilePicture)} 
             alt={user.username} 
             className="header-profile-picture"
           />

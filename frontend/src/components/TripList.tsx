@@ -3,6 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trip } from '../types';
+import { getFullImageUrl } from '../utils/imageUtils';
 
 interface TripListProps {
   userId: string,
@@ -24,7 +25,7 @@ const TripList: React.FC<TripListProps> = ({ userId, trips, onDeleteTrip }) => {
           <div className="trip-users">
             <Link to={`/profile/${trip.creator._id}`}>
               <img 
-                src={trip.creator.profilePicture || '/default-profile.png'} 
+                src={getFullImageUrl(trip.creator.profilePicture)} 
                 alt={trip.creator.username} 
                 title={`Creator: ${trip.creator.username}`}
                 className="user-avatar"
@@ -34,7 +35,7 @@ const TripList: React.FC<TripListProps> = ({ userId, trips, onDeleteTrip }) => {
             {trip.sharedWith.map((user) => (
               <Link key={user._id} to={`/profile/${user._id}`}>
                 <img 
-                  src={user.profilePicture || '/default-profile.png'} 
+                  src={getFullImageUrl(user.profilePicture)} 
                   alt={user.username} 
                   title={user.username}
                   className="user-avatar"

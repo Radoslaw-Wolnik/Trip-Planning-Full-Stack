@@ -129,7 +129,7 @@ const Profile: React.FC = () => {
       <div>
         <h1>{isOwnProfile ? 'My Profile' : `${user.username}'s Profile`}</h1>
         <img
-          src={user.profilePicture? getFullImageUrl(user.profilePicture) : '/default-profile.png'}
+          src={getFullImageUrl(user.profilePicture)}
           alt={user.username}
           style={{ width: '100px', height: '100px', borderRadius: '50%' }}
         />
