@@ -11,7 +11,9 @@ import {
     deleteTrip,
     generateShareLink, 
     getSharedTrip,
-    getTripDetails 
+    getTripDetails,
+    joinTripEdit,
+    leaveTripEdit
 } from '../controllers/tripController.js';
 
 
@@ -32,7 +34,7 @@ router.post('/:id/share', authenticateToken, generateShareLink);
 router.get('/shared/:shareCode', getSharedTrip);
 
 // join leave the socket
-router.post('/:id/join', auth, joinTripEdit);
-router.post('/:id/leave', auth, leaveTripEdit);
+router.post('/:id/join', authenticateToken, joinTripEdit);
+router.post('/:id/leave', authenticateToken, leaveTripEdit);
 
 export default router;
