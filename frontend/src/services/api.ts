@@ -93,8 +93,9 @@ export const createTrip = (tripData: TripData): Promise<AxiosResponse<Trip>> =>
 export const getTrips = (): Promise<AxiosResponse<Trip[]>> => 
   typedApi.get('/trips');
 
-export const updateTrip = (id: string, updateTripData: updateTripData): Promise<AxiosResponse<Trip>> => 
-  typedApi.put(`/trips/${id}`, updateTripData);
+// old one
+//export const updateTrip = (id: string, updateTripData: updateTripData): Promise<AxiosResponse<Trip>> => 
+//  typedApi.put(`/trips/${id}`, updateTripData);
 
 export const shareTrip = (id: string, userData: { email: string }): Promise<AxiosResponse<void>> => 
   typedApi.post(`/trips/${id}/invite`, userData);
@@ -138,6 +139,21 @@ export const sendVerificationEmail = (): Promise<AxiosResponse<void>> =>
 
 export const verifyEmail = (token: string): Promise<AxiosResponse<void>> => 
   typedApi.get(`/users/verify-email/${token}`);
+
+
+
+// socket io related
+
+export const joinTripEdit = (tripId: string): Promise<AxiosResponse<{ activeEditors: number }>> => 
+  typedApi.post(`/trips/${tripId}/join`);
+
+export const leaveTripEdit = (tripId: string): Promise<AxiosResponse<{ activeEditors: number }>> => 
+  typedApi.post(`/trips/${tripId}/leave`);
+
+// Note: This function already exists in your api.ts, but let's ensure it's updated to match the new requirements
+export const updateTrip = (id: string, updateTripData: updateTripData): Promise<AxiosResponse<Trip>> => 
+  typedApi.put(`/trips/${id}`, updateTripData);
+
 
 
 export default typedApi;

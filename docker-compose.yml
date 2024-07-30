@@ -24,6 +24,17 @@ services:
       - mongo-data:/data/db
       - ./backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
 
+  socketio:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.socketio
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV: development
+      - FRONTEND_URL: http://localhost:5173
+      - MONGODB_URI: mongodb://mongo:27017/yourdb
+
   backend:
     build:
       context: ./backend

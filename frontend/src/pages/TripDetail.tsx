@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTripDetails, updateTrip, deleteTrip, generateShareLink } from '../services/api';
+import { getTripDetails, joinTripEdit, leaveTripEdit, updateTrip, deleteTrip, generateShareLink } from '../services/api';
+import { Place, Trip, updateTripData } from '../types';
+import io, { Socket } from 'socket.io-client';
 import Map from '../components/Map';
 import ShareTrip from '../components/ShareTrip';
 import Modal from '../components/Modal';
-import { Place, Trip } from '../types';
-
-
-
 
 const TripDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,35 +17,107 @@ const TripDetail: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTrip = async () => {
-      if (id) {
-        try {
-          const response = await getTripDetails(id);
-          setTrip(response.data);
-          if (response.data.startDate) {
-            setSelectedDate(new Date(response.data.startDate));
-          }
-        } catch (error) {
-          console.error('Error fetching trip:', error);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(false);
+
+  const fetchTripData = useCallback(async () => {
+    if (id) {
+      try {
+        const response = await getTripDetails(id);
+        setTrip(response.data);
+        if (response.data.startDate) {
+          setSelectedDate(new Date(response.data.startDate));
         }
+      } catch (error) {
+        console.error('Error fetching trip details:', error);
       }
-    };
-    fetchTrip();
+    }
   }, [id]);
 
-  if (!trip) return <div>Loading...</div>;
+  const handleJoinTripEdit = useCallback(async () => {
+    if (id) {
+      try {
+        const response = await joinTripEdit(id);
+        setIsRealTimeEnabled(response.data.activeEditors >= 2);
+      } catch (error) {
+        console.error('Error joining trip edit:', error);
+      }
+    }
+  }, [id]);
+
+  const handleLeaveTripEdit = useCallback(async () => {
+    if (id) {
+      try {
+        await leaveTripEdit(id);
+      } catch (error) {
+        console.error('Error leaving trip edit:', error);
+      }
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchTripData();
+    handleJoinTripEdit();
+
+    return () => {
+      handleLeaveTripEdit();
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, [fetchTripData, handleJoinTripEdit, handleLeaveTripEdit, socket]);
+
+  useEffect(() => {
+    if (isRealTimeEnabled && !socket && id) {
+      const newSocket = io('http://localhost:5001');
+      setSocket(newSocket);
+
+      newSocket.on('connect', () => {
+        newSocket.emit('join-trip', id);
+      });
+
+      newSocket.on('trip-updated', (updatedTrip: Trip) => {
+        setTrip(updatedTrip);
+      });
+
+      newSocket.on('enable-real-time', (enabled: boolean) => {
+        setIsRealTimeEnabled(enabled);
+      });
+
+      return () => {
+        newSocket.disconnect();
+      };
+    } else if (!isRealTimeEnabled && socket) {
+      socket.disconnect();
+      setSocket(null);
+    }
+  }, [isRealTimeEnabled, id, socket]);
+
+  const handleUpdateTrip = async (updatedData: updateTripData) => {
+    if (id) {
+      try {
+        const response = await updateTrip(id, updatedData);
+        setTrip(response.data);
+        if (isRealTimeEnabled && socket) {
+          socket.emit('update-trip', { tripId: id, ...updatedData });
+        }
+      } catch (error) {
+        console.error('Error updating trip:', error);
+      }
+    }
+  };
 
   const handleEdit = () => setIsEditMode(true);
   const handleSave = async () => {
     if (trip) {
-      try {
-        const response = await updateTrip(trip._id, {title: trip.title, description: trip.description, startDate: trip.startDate, endDate: trip.endDate, places: trip.places});
-        setTrip(response.data);
-        setIsEditMode(false);
-      } catch (error) {
-        console.error('Error updating trip:', error);
-      }
+      await handleUpdateTrip({
+        title: trip.title,
+        description: trip.description,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+        places: trip.places
+      });
+      setIsEditMode(false);
     }
   };
 
@@ -60,14 +130,15 @@ const TripDetail: React.FC = () => {
         longitude: lng,
         order: trip.places.length
       };
-      setTrip({ ...trip, places: [...trip.places, newPlace] });
+      const updatedPlaces = [...trip.places, newPlace];
+      handleUpdateTrip({ ...trip, places: updatedPlaces });
     }
   };
 
   const handleDeletePlace = (index: number) => {
     if (trip) {
       const newPlaces = trip.places.filter((_, i) => i !== index);
-      setTrip({ ...trip, places: newPlaces });
+      handleUpdateTrip({ ...trip, places: newPlaces });
     }
   };
 
@@ -104,6 +175,8 @@ const TripDetail: React.FC = () => {
       }
     }
   };
+
+  if (!trip) return <div>Loading...</div>;
 
   
 

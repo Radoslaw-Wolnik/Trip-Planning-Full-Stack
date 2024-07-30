@@ -31,4 +31,8 @@ router.post('/:id/share', authenticateToken, generateShareLink);
 
 router.get('/shared/:shareCode', getSharedTrip);
 
+// join leave the socket
+router.post('/:id/join', auth, joinTripEdit);
+router.post('/:id/leave', auth, leaveTripEdit);
+
 export default router;
