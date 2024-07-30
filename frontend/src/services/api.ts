@@ -1,23 +1,30 @@
 // frontend/src/services/api.ts
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosHeaders, AxiosError, AxiosResponse, AxiosRequestConfig } from 'axios';
+import { User, FullUser, Trip, Credentials, UserData, TripData } from '../types';
 
-//const API_URL = import.meta.env.VITE_API_URL; idk why but also doesnt work
 const API_URL = "http://localhost:5000/api";
 
-// Create an Axios instance with default settings
-const api: AxiosInstance = axios.create({
+// Create a more flexible Axios instance with generics
+const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+// Type assertion for methods
+const typedApi = api as {
+  get: <T = any>(url: string, config?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+  delete: <T = any>(url: string, config?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+} & AxiosInstance;
+
 // Set up an interceptor for requests
-api.interceptors.request.use(
+typedApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Ensure the headers exist and are of type AxiosHeaders
       if (!config.headers) {
         config.headers = new AxiosHeaders();
       }
@@ -25,72 +32,109 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    // Handle request error
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
 
-interface Credentials {
-  email: string;
-  password: string;
+// Custom ApiError class
+export class ApiError extends Error {
+  constructor(public statusCode: number, message: string) {
+    super(message);
+    this.name = 'ApiError';
+  }
 }
 
-interface UserData {
-  username: string;
-  email: string;
-  password: string;
-  trips?: string[]; // Array of Trip IDs
+/*
+If you know the exact structure of your API's error responses, you could create a more specific type for error.response.data
+This would provide even better type safety, but it requires that you know and define the structure of your API's error responses.
+
+interface APIErrorResponse {
+  message: string;
+  // Add any other properties your API might return in error responses
 }
 
-interface Place {
-  name: string;
-  date: Date;
-  latitude: number;
-  longitude: number;
-  order: number;
-}
-
-interface TripData {
-  title: string;
-  description?: string;
-  startDate?: string; // ISO date string
-  endDate?: string; // ISO date string
-  places?: Place[];
-  creator?: string; // User ID
-  sharedWith?: string[]; // Array of User IDs
-  invitationCode?: string;
-}
-
-// interface ShareData { userId: string; }
-
-export const login = (credentials: Credentials) => api.post('/users/login', credentials);
-export const register = (userData: UserData) => api.post('/users/register', userData);
-export const createTrip = (tripData: TripData) => api.post('/trips', tripData);
-export const getTrips = () => api.get('/trips');
-export const updateTrip = (id: string, tripData: TripData) => api.put(`/trips/${id}`, tripData);
-
-//export const shareTrip = (id: string, userData: ShareData) => api.post(`/trips/${id}/share`, userData);
-export const shareTrip = (id: string, userData: { email: string }) => api.post(`/trips/${id}/invite`, userData);
-export const joinTrip = (invitationCode: string) => api.post('/trips/join', { invitationCode });
-export const getTripDetails = (id: string) => api.get(`/trips/${id}`);
-export const deleteTrip = (id: string) => api.delete(`/trips/${id}`);
+// Then in the error handler:
+const errorData = error.response.data as APIErrorResponse;
+throw new ApiError(error.response.status, errorData.message || 'An error occurred');
+*/
 
 
-export const getMe = () => api.get('/users/me');
-export const getOtherUserProfile = (userId: string) => api.get(`/users/${userId}`);
-export const getUserTrips = (userId: string) => api.get(`/users/${userId}/trips`);
-export const updateUserProfile = (formData: FormData) => api.put('/users/upload-profile-picture', formData, {
-  headers: { 'Content-Type': 'multipart/form-data' }
-});
-export const changePassword = (data: { currentPassword: string, newPassword: string }) => 
-  api.put('/users/change-password', data);
-export const sendVerificationEmail = () => api.post('/users/send-verification');
-export const verifyEmail = (token: string) => api.get(`/users/verify-email/${token}`);
+// Error handling middleware
+typedApi.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
+    if (error.response) {
+      const errorMessage = typeof error.response.data === 'object' && error.response.data !== null
+        ? (error.response.data as any).message || 'An error occurred'
+        : 'An error occurred';
+      throw new ApiError(error.response.status, errorMessage);
+    } else if (error.request) {
+      throw new ApiError(0, 'No response received from server');
+    } else {
+      throw new ApiError(0, error.message);
+    }
+  }
+);
 
-export const generateShareLink = (tripId: string) => api.post(`/trips/${tripId}/share`);
-export const getSharedTrip = (shareCode: string) => api.get(`/trips/shared/${shareCode}`);
+// API functions with proper typing
+export const login = (credentials: Credentials): Promise<AxiosResponse<{ token: string; user: User }>> => 
+  typedApi.post('/users/login', credentials);
+
+export const register = (userData: UserData): Promise<AxiosResponse<User>> => 
+  typedApi.post('/users/register', userData);
+
+export const createTrip = (tripData: TripData): Promise<AxiosResponse<Trip>> => 
+  typedApi.post('/trips', tripData);
+
+export const getTrips = (): Promise<AxiosResponse<Trip[]>> => 
+  typedApi.get('/trips');
+
+export const updateTrip = (id: string, tripData: TripData): Promise<AxiosResponse<Trip>> => 
+  typedApi.put(`/trips/${id}`, tripData);
+
+export const shareTrip = (id: string, userData: { email: string }): Promise<AxiosResponse<void>> => 
+  typedApi.post(`/trips/${id}/invite`, userData);
+
+export const joinTrip = (invitationCode: string): Promise<AxiosResponse<Trip>> => 
+  typedApi.post('/trips/join', { invitationCode });
+
+export const getTripDetails = (id: string): Promise<AxiosResponse<Trip>> => 
+  typedApi.get(`/trips/${id}`);
+
+export const deleteTrip = (id: string): Promise<AxiosResponse<void>> => 
+  typedApi.delete(`/trips/${id}`);
+
+export const getMe = (): Promise<AxiosResponse<FullUser>> => 
+  typedApi.get('/users/me');
+
+export const getOtherUserProfile = (userId: string): Promise<AxiosResponse<User>> => 
+  typedApi.get(`/users/${userId}`);
+
+export const getUserTrips = (userId: string): Promise<AxiosResponse<Trip[]>> => 
+  typedApi.get(`/users/${userId}/trips`);
+
+export const generateShareLink = (tripId: string): Promise<AxiosResponse<{ shareCode: string }>> => 
+  typedApi.post(`/trips/${tripId}/share`);
+
+export const getSharedTrip = (shareCode: string): Promise<AxiosResponse<Trip>> => 
+  typedApi.get(`/trips/shared/${shareCode}`);
 
 
+// Istnieje opcja że tu FullUser
+export const updateUserProfile = (formData: FormData): Promise<AxiosResponse<User>> =>
+  typedApi.put<User>('/users/upload-profile-picture', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
 
-export default api;
+export const changePassword = (data: { currentPassword: string; newPassword: string }): Promise<AxiosResponse<void>> => 
+  typedApi.put('/users/change-password', data);
+
+export const sendVerificationEmail = (): Promise<AxiosResponse<void>> => 
+  typedApi.post('/users/send-verification');
+
+export const verifyEmail = (token: string): Promise<AxiosResponse<void>> => 
+  typedApi.get(`/users/verify-email/${token}`);
+
+
+export default typedApi;
