@@ -23,7 +23,7 @@ export interface User {
     description?: string;
     startDate?: string;
     endDate?: string;
-    places?: Place[];
+    places: Place[];
     creator: User;
     sharedWith: User[];
     invitationCode?: string;
@@ -46,8 +46,16 @@ export interface User {
     description?: string;
     startDate?: string;
     endDate?: string;
-    places?: Place[];
+    places: Place[];
     creator?: string;
     sharedWith?: string[];
     invitationCode?: string;
+  }
+
+  export interface updateTripData {
+    title: string;
+    description?: string;
+    startDate?: string;
+    endDate?: string;
+    places: Place[];
   }

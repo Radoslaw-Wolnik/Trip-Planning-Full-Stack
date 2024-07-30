@@ -4,23 +4,9 @@ import { getTripDetails, updateTrip, deleteTrip, generateShareLink } from '../se
 import Map from '../components/Map';
 import ShareTrip from '../components/ShareTrip';
 import Modal from '../components/Modal';
+import { Place, Trip } from '../types';
 
-interface Place {
-  name: string;
-  date: Date;
-  latitude: number;
-  longitude: number;
-  order: number;
-}
 
-interface Trip {
-  _id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  places: Place[];
-}
 
 const TripDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,11 +35,13 @@ const TripDetail: React.FC = () => {
     fetchTrip();
   }, [id]);
 
+  if (!trip) return <div>Loading...</div>;
+
   const handleEdit = () => setIsEditMode(true);
   const handleSave = async () => {
     if (trip) {
       try {
-        const response = await updateTrip(trip._id, trip);
+        const response = await updateTrip(trip._id, {title: trip.title, description: trip.description, startDate: trip.startDate, endDate: trip.endDate, places: trip.places});
         setTrip(response.data);
         setIsEditMode(false);
       } catch (error) {
@@ -69,7 +57,7 @@ const TripDetail: React.FC = () => {
         date: selectedDate,
         latitude: lat,
         longitude: lng,
-        order: trip.places.length + 1
+        order: trip.places.length
       };
       setTrip({ ...trip, places: [...trip.places, newPlace] });
     }
@@ -116,7 +104,7 @@ const TripDetail: React.FC = () => {
     }
   };
 
-  if (!trip) return <div>Loading...</div>;
+  
 
   return (
     <div className="trip-detail">

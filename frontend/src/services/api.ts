@@ -1,6 +1,6 @@
 // frontend/src/services/api.ts
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosHeaders, AxiosError, AxiosResponse, AxiosRequestConfig } from 'axios';
-import { User, FullUser, Trip, Credentials, UserData, TripData } from '../types';
+import { User, FullUser, Trip, Credentials, UserData, TripData, updateTripData } from '../types';
 
 const API_URL = "http://localhost:5000/api";
 
@@ -93,8 +93,8 @@ export const createTrip = (tripData: TripData): Promise<AxiosResponse<Trip>> =>
 export const getTrips = (): Promise<AxiosResponse<Trip[]>> => 
   typedApi.get('/trips');
 
-export const updateTrip = (id: string, tripData: TripData): Promise<AxiosResponse<Trip>> => 
-  typedApi.put(`/trips/${id}`, tripData);
+export const updateTrip = (id: string, updateTripData: updateTripData): Promise<AxiosResponse<Trip>> => 
+  typedApi.put(`/trips/${id}`, updateTripData);
 
 export const shareTrip = (id: string, userData: { email: string }): Promise<AxiosResponse<void>> => 
   typedApi.post(`/trips/${id}/invite`, userData);
