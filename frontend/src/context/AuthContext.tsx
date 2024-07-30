@@ -1,21 +1,22 @@
-// src/context/AuthContext.tsx
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { login, register, getMe } from '../services/api';
-//import jwtDecode from 'jwt-decode';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { login as apiLogin, logout as apiLogout, register as apiRegister, getMe } from '../services/api';
+import { FullUser } from '../types';
 
-interface AuthContextProps {
-  user: any | null;
+
+export interface AuthContextType {
+  user: FullUser | null;
   loading: boolean;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
-  register: (userData: { email: string; username: string; password: string }) => Promise<void>;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  updateCurrentUser: (updatedUser: FullUser) => void;
 }
 
-export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<FullUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -26,55 +27,69 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const response = await getMe();
       setUser(response.data);
-      console.log('fetching data response:', response);
     } catch (error) {
       console.error('Error fetching user data:', error);
-      // Handle error (e.g., redirect to login page)
+      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loginUser = async (credentials: { email: string; password: string }) => {
+  const login = useCallback(async (email: string, password: string) => {
     try {
-      const response = await login(credentials);
-      localStorage.setItem('token', response.data.token);
-
-      //const decodedToken = jwtDecode(response.data.token);
-      //const userId = decodedToken.user.id;
-      //console.log(userId);
-      console.log('login response', response);
-      await fetchUserData();
-      
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
-  };
-
-  const registerUser = async (userData: { email: string; username: string; password: string }) => {
-    console.log(userData);
-    try {
-      const response = await register(userData);
+      const response = await apiLogin({email, password});
       localStorage.setItem('token', response.data.token);
       await fetchUserData();
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Login failed:', error);
       throw error;
     }
-  };
+  }, [fetchUserData]);
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
+  const register = useCallback(async (email: string, username: string, password: string) => {
+    try {
+      const response = await apiRegister({ email, username, password });
+      //localStorage.setItem('token', response.data.token);
+
+      console.log(response);
+      await login(email, password);
+      //await fetchUserData();
+    } catch (error) {
+      console.error('Registration failed:', error);
+      throw error;
+    }
+  }, [fetchUserData]);
+
+  const logout = useCallback(async () => {
+    try {
+      await apiLogout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      localStorage.removeItem('token');
+      setUser(null);
+    }
+  }, []);
+
+  const updateCurrentUser = useCallback((updatedUser: FullUser) => {
+    setUser(updatedUser);
+  }, []);
+
+  const contextValue: AuthContextType = {
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    updateCurrentUser,
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login: loginUser, register: registerUser, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
