@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useModal } from '../hooks/useModal';
+import { Credentials } from '../types';
 
 const LoginForm: React.FC = () => {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [credentials, setCredentials] = useState<Credentials>({ email: '', password: '' });
   const [error, setError] = useState('');
 //  const navigate = useNavigate();
   const { login } = useAuth();
@@ -18,7 +19,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await login(credentials);
+      await login(credentials.email, credentials.password);
       closeModal();
       //navigate('/trips'); // redirect to trips after succesfull login
     } catch (error) {
