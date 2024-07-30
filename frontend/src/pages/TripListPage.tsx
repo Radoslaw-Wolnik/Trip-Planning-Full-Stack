@@ -6,28 +6,24 @@ import Modal from '../components/Modal';
 import CreateTripForm from '../components/CreateTripForm';
 import TripList from '../components/TripList';
 import { useAuth } from '../hooks/useAuth';
+import { Trip } from '../types';
 
-
-interface User {
-  _id: string;
-  username: string;
-  profilePicture?: string;
-}
-
-interface Trip {
-  _id: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  creator: User;
-  sharedWith: User[];
-}
 
 const TripListPage: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const navigate = useNavigate();
   const { isModalOpen, openModal, closeModal, modalContent } = useModal();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (!user) {
+    // This case should theoretically never happen if the loading state is handled correctly,
+    // but it's good to have as a fallback
+    navigate('/login');
+    return null;
+  }
 
   const fetchTrips = async () => {
     try {

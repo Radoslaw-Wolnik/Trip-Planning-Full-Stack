@@ -2,21 +2,7 @@
 // used style for avatars !!
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-interface User {
-  _id: string;
-  username: string;
-  profilePicture?: string;
-}
-
-interface Trip {
-  _id: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  creator: User;
-  sharedWith: User[];
-}
+import { Trip } from '../types';
 
 interface TripListProps {
   userId: string,
@@ -33,7 +19,7 @@ const TripList: React.FC<TripListProps> = ({ userId, trips, onDeleteTrip }) => {
           <Link to={`/trip/${trip._id}`}>
             <h3>{trip.title}</h3>
           </Link>
-          <p>{new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}</p>
+          <p>{trip.startDate? new Date(trip.startDate).toLocaleDateString() : "None"} - {trip.endDate? new Date(trip.endDate).toLocaleDateString() : "None"}</p>
           <p>{trip.creator._id === userId ? 'You are the owner' : 'You are invited'}</p>
           <div className="trip-users">
             <Link to={`/profile/${trip.creator._id}`}>

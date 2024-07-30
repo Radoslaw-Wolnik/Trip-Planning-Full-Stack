@@ -5,6 +5,7 @@ import { useModal } from '../hooks/useModal';
 import { useAuth } from '../hooks/useAuth';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import { getFullImageUrl } from '../utils/imageUtils';
 
 //interface HeaderProps {
 //  openModal: (newContent: ModalContent) => void;
@@ -47,10 +48,15 @@ const Header: React.FC = () => {
         <h4>My profile</h4>
       </Link>
       {user ? (
-        <>
+        <div className="user-info">
+          <img 
+            src={ user.profilePicture? getFullImageUrl(user.profilePicture) : '/default-profile.png'} 
+            alt={user.username} 
+            className="header-profile-picture"
+          />
           <span>Welcome, {user.username}</span>
           <button onClick={logout}>Logout</button>
-        </>
+        </div>
       ) : (
         <>
           <button onClick={handleOpenLogin}>Login</button>

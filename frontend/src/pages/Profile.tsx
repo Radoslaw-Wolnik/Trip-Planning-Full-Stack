@@ -1,22 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getMe, getOtherUserProfile, getUserTrips, updateUserProfile, changePassword, sendVerificationEmail } from '../services/api';
+import { 
+  getMe, 
+  getOtherUserProfile, 
+  getUserTrips, 
+  updateUserProfile, 
+  changePassword, 
+  sendVerificationEmail 
+} from '../services/api';
 import TripList from '../components/TripList';
 import { useAuth } from '../hooks/useAuth';
+import { User, FullUser } from '../types';
+import { getFullImageUrl } from '../utils/imageUtils';
 
-
+function isFullUser(user: User | FullUser): user is FullUser {
+  return (user as FullUser).isVerified !== undefined;
+}
 
 const Profile: React.FC = () => {
     const { userId } = useParams<{ userId: string }>();
-    const { user: currentUser, logout } = useAuth();
+    const { user: currentUser, logout, updateCurrentUser, loading } = useAuth();
     const navigate = useNavigate();
   
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | FullUser | null>(null);
     const [trips, setTrips] = useState<any[]>([]);
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [newPassword, setNewPassword] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+    // Early return if currentUser is null
+    // Use a type guard:
+    // This method allows TypeScript to infer the correct type within a certain block.
+    //if (!currentUser) {
+    //  return <div>Loading...</div>; // or redirect to login
+    //}
+
+    // however we will be using loading from Auth
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+    if (!currentUser) {
+      // This case should theoretically never happen if the loading state is handled correctly,
+      // but it's good to have as a fallback
+      navigate('/login');
+      return null;
+    }
   
     const isOwnProfile = !userId || userId === currentUser._id;
   
@@ -57,6 +86,8 @@ const Profile: React.FC = () => {
         // Refresh user data
         const userData = await getMe();
         setUser(userData.data);
+        // Update the currentUser in AuthContext
+        updateCurrentUser(userData.data);
       } catch (error) {
         console.error('Error updating profile:', error);
       }
@@ -98,12 +129,12 @@ const Profile: React.FC = () => {
       <div>
         <h1>{isOwnProfile ? 'My Profile' : `${user.username}'s Profile`}</h1>
         <img
-          src={user.profilePicture || '/default-profile.png'}
+          src={user.profilePicture? getFullImageUrl(user.profilePicture) : '/default-profile.png'}
           alt={user.username}
           style={{ width: '100px', height: '100px', borderRadius: '50%' }}
         />
         
-        {isOwnProfile && (
+        {isOwnProfile && isFullUser(user) && (
           <>
             <input type="file" onChange={handleProfilePictureChange} />
             <button onClick={handleUpdateProfile}>Update Profile Picture</button>
@@ -128,7 +159,7 @@ const Profile: React.FC = () => {
             <button onClick={() => handleThemeChange('light')}>Light</button>
             <button onClick={() => handleThemeChange('dark')}>Dark</button>
   
-            {!user.isVerified && (
+            {user.isVerified !== undefined && !user.isVerified && (
               <button onClick={handleVerifyEmail}>Verify Email</button>
             )}
   
