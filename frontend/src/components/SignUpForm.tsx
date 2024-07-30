@@ -18,7 +18,7 @@ const SignUpForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await register(userData);
+      await register(userData.email, userData.username, userData.password);
       closeModal();
 //      navigate('/trips'); // Redirect to trips page after successful registration
     } catch (error) {

@@ -8,6 +8,7 @@ import { Place, Trip } from '../types';
 
 
 
+
 const TripDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [trip, setTrip] = useState<Trip | null>(null);

@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import React, { useState, useEffect, useMemo } from 'react';
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { Place } from '../types';
 
 // API Key should be securely handled
@@ -65,9 +65,8 @@ const Map: React.FC<MapProps> = ({ places, onMapClick }) => {
       zoom={5}
       onClick={handleMapClick}
     >
-      <Marker position={center} />
       {markers.map((marker) => (
-        <Marker
+        <MarkerF
           key={marker.key}
           position={marker.position}
           label={marker.label}
