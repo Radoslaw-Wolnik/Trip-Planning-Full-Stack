@@ -24,6 +24,11 @@ services:
       - mongo-data:/data/db
       - ./backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
   socketio:
     build:
       context: ./backend
@@ -35,6 +40,9 @@ services:
       - FRONTEND_URL=http://localhost:5173
       - MONGODB_URI=mongodb://mongo:27017/yourdb
       - PORT=5001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
 
   backend:
     build:
@@ -45,6 +53,7 @@ services:
       - '5000:5000'
     depends_on:
       - mongo
+      - redis
     env_file:
       - ./backend/.env.development  # Path to the .env file
     volumes:
