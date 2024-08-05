@@ -6,7 +6,7 @@ import {
     createTrip, 
     getTrips, 
     updateTrip, 
-    shareTrip, 
+    inviteTrip, 
     joinTrip, 
     deleteTrip,
     generateShareLink, 
@@ -28,7 +28,7 @@ router.delete('/:id', authenticateToken, deleteTrip);
 
 router.post('/join', authenticateToken, joinTrip);
 
-router.post('/:id/invite', authenticateToken, shareTrip);
+router.post('/:id/invite', authenticateToken, inviteTrip);
 router.post('/:id/share', authenticateToken, generateShareLink);
 
 router.get('/shared/:shareCode', getSharedTrip);

@@ -155,8 +155,8 @@ export const getTripDetails = async (req, res) => {
   }
 };
 
-// the share-join in service trip as an editor
-export const shareTrip = async (req, res) => {
+// the invite-join in service trip as an editor
+export const inviteTrip = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
 
@@ -219,15 +219,10 @@ export const joinTripEdit = async (req, res) => {
       return res.status(404).json({ message: 'Trip not found' });
     }
 
-    // If activeEditors is now 2 or more, notify clients to open socket
-    if (trip.activeEditors >= 2) {
-      req.app.get('io').to(tripId).emit('enable-real-time', true);
-    }
-
     res.json({ activeEditors: trip.activeEditors });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
+    console.error('Error joining trip edit:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -244,15 +239,11 @@ export const leaveTripEdit = async (req, res) => {
       return res.status(404).json({ message: 'Trip not found' });
     }
 
-    // If activeEditors is now less than 2, notify clients to close socket
-    if (trip.activeEditors < 2) {
-      req.app.get('io').to(tripId).emit('enable-real-time', false);
-    }
 
     res.json({ activeEditors: trip.activeEditors });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
+    console.error('Error leaving trip edit:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 

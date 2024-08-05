@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTripDetails, joinTripEdit, leaveTripEdit, updateTrip, deleteTrip, generateShareLink } from '../services/api';
+import { getTripDetails, joinTripEdit, leaveTripEdit, updateTrip, deleteTrip, generateShareLink, inviteTrip } from '../services/api';
 import { Place, Trip, updateTripData } from '../types';
 import io, { Socket } from 'socket.io-client';
 import Map from '../components/Map';
-import ShareTrip from '../components/ShareTrip';
 import Modal from '../components/Modal';
 
 const TripDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isMenuHidden, setIsMenuHidden] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
+  const [inviteCode, setInviteCode] = useState<string | null>(null);
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(false);
@@ -34,26 +33,40 @@ const TripDetail: React.FC = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (socket && id) {
+      socket.on('enable-real-time', (enabled: boolean) => {
+        setIsRealTimeEnabled(enabled);
+      });
+  
+      // Cleanup function
+      return () => {
+        socket.off('enable-real-time');
+      };
+    }
+  }, [socket, id]);
+
   const handleJoinTripEdit = useCallback(async () => {
-    if (id) {
+    if (id && socket) {
       try {
-        const response = await joinTripEdit(id);
-        setIsRealTimeEnabled(response.data.activeEditors >= 2);
+        await joinTripEdit(id);
+        socket.emit('editor-joined', id);
       } catch (error) {
         console.error('Error joining trip edit:', error);
       }
     }
-  }, [id]);
-
+  }, [id, socket]);
+  
   const handleLeaveTripEdit = useCallback(async () => {
-    if (id) {
+    if (id && socket) {
       try {
         await leaveTripEdit(id);
+        socket.emit('editor-left', id);
       } catch (error) {
         console.error('Error leaving trip edit:', error);
       }
     }
-  }, [id]);
+  }, [id, socket]);
 
   useEffect(() => {
     fetchTripData();
@@ -176,6 +189,18 @@ const TripDetail: React.FC = () => {
     }
   };
 
+  const handleCreateInviteCode = async () => {
+    if (trip) {
+      try {
+        const response = await inviteTrip(trip._id);
+        const InviteCode = response.data.invitationCode;
+        setInviteCode(InviteCode);
+      } catch (error) {
+        console.error('Error generating share link:', error);
+      }
+    }
+  };
+
   if (!trip) return <div>Loading...</div>;
 
   
@@ -186,7 +211,13 @@ const TripDetail: React.FC = () => {
       <button onClick={() => setIsMenuHidden(!isMenuHidden)}>
         {isMenuHidden ? 'Show Menu' : 'Hide Menu'}
       </button>
-      <button onClick={() => setIsShareModalOpen(true)}>Invite to edit</button>
+      <button onClick={handleCreateInviteCode}>Invite to edit</button>
+      {inviteCode && (
+        <div>
+          <p>give this code to invite to edit:</p>
+          <input type="text" value={inviteCode} readOnly />
+        </div>
+      )}
 
       <button onClick={handleGenerateShareLink}>Generate Share Link (view only)</button>
       {shareLink && (
@@ -238,12 +269,6 @@ const TripDetail: React.FC = () => {
       ) : (
         <button onClick={handleEdit}>Edit</button>
       )}
-
-      <ShareTrip
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        tripId={trip._id}
-      />
 
       <Modal
         isModalOpen={isDeleteModalOpen}

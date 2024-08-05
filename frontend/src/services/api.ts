@@ -97,11 +97,7 @@ export const getTrips = (): Promise<AxiosResponse<Trip[]>> =>
 //export const updateTrip = (id: string, updateTripData: updateTripData): Promise<AxiosResponse<Trip>> => 
 //  typedApi.put(`/trips/${id}`, updateTripData);
 
-export const shareTrip = (id: string, userData: { email: string }): Promise<AxiosResponse<void>> => 
-  typedApi.post(`/trips/${id}/invite`, userData);
 
-export const joinTrip = (invitationCode: string): Promise<AxiosResponse<Trip>> => 
-  typedApi.post('/trips/join', { invitationCode });
 
 export const getTripDetails = (id: string): Promise<AxiosResponse<Trip>> => 
   typedApi.get(`/trips/${id}`);
@@ -117,6 +113,15 @@ export const getOtherUserProfile = (userId: string): Promise<AxiosResponse<User>
 
 export const getUserTrips = (userId: string): Promise<AxiosResponse<Trip[]>> => 
   typedApi.get(`/users/${userId}/trips`);
+
+
+// generate invitation code, join edit share read only and fetch read only
+
+export const inviteTrip = (TripId: string): Promise<AxiosResponse<{ invitationCode: string }>> => 
+  typedApi.post(`/trips/${TripId}/invite`);
+
+export const joinTrip = (invitationCode: string): Promise<AxiosResponse<Trip>> => 
+  typedApi.post('/trips/join', { invitationCode });
 
 export const generateShareLink = (tripId: string): Promise<AxiosResponse<{ shareCode: string }>> => 
   typedApi.post(`/trips/${tripId}/share`);

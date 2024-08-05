@@ -1,20 +1,16 @@
 import { Server } from 'socket.io';
 import http from 'http';
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import Trip from '../models/Trip.js';
+import connectDB from '../config/database.js';
 
 dotenv.config();
 
 const PORT = process.env.SOCKET_PORT || 5001;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/yourdb';
 
 // Connect to MongoDB
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+connectDB();
 
 const server = http.createServer();
 const io = new Server(server, {
@@ -24,15 +20,48 @@ const io = new Server(server, {
   },
 });
 
+const updateRealTimeStatus = async (tripId) => {
+  try {
+    const trip = await Trip.findById(tripId);
+    if (trip) {
+      const enableRealTime = trip.activeEditors >= 2;
+      io.to(tripId).emit('enable-real-time', enableRealTime);
+      console.log(`Real-time ${enableRealTime ? 'enabled' : 'disabled'} for trip: ${tripId}`);
+    }
+  } catch (error) {
+    console.error('Error updating real-time status:', error);
+  }
+};
+
 io.on('connection', (socket) => {
   console.log('A user connected');
 
   socket.on('join-trip', (tripId) => {
     socket.join(tripId);
+    console.log(`User joined trip: ${tripId}`);
   });
 
-  socket.on('update-trip', (data) => {
+  socket.on('update-trip', async (data) => {
     socket.to(data.tripId).emit('trip-updated', data);
+    console.log(`Trip updated: ${data.tripId}`);
+  });
+
+  socket.on('editor-joined', async (tripId) => {
+    try {
+      await Trip.findByIdAndUpdate(tripId, { $inc: { activeEditors: 1 } });
+      await updateRealTimeStatus(tripId);
+    } catch (error) {
+      console.error('Error handling editor join:', error);
+    }
+  });
+
+  socket.on('editor-left', async (tripId) => {
+    try {
+      await Trip.findByIdAndUpdate(tripId, { $inc: { activeEditors: -1 } });
+      await updateRealTimeStatus(tripId);
+    } catch (error) {
+      console.error('Error handling editor leave:', error);
+    }
   });
 
   socket.on('disconnect', () => {
