@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
-import { shareTrip, joinTrip } from '../services/api';
+import { inviteTrip, joinTrip } from '../services/api';
 
 interface ShareTripProps {
   isOpen: boolean;
@@ -9,13 +9,14 @@ interface ShareTripProps {
 }
 
 const ShareTrip: React.FC<ShareTripProps> = ({ isOpen, onClose, tripId }) => {
-  const [email, setEmail] = useState('');
+  //const [email, setEmail] = useState('');
   const [invitationCode, setInvitationCode] = useState('');
 
   const handleShare = async () => {
     try {
-      await shareTrip(tripId, { email });
-      onClose();
+      await inviteTrip(tripId);
+
+      //onClose();
     } catch (error) {
       console.error('Error sharing trip:', error);
     }
@@ -33,13 +34,8 @@ const ShareTrip: React.FC<ShareTripProps> = ({ isOpen, onClose, tripId }) => {
   return (
     <Modal isModalOpen={isOpen} onClose={onClose}>
       <h2>Share Trip</h2>
-      <input
-        type="email"
-        placeholder="Enter email to share with"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
       <button onClick={handleShare}>Share</button>
+      
 
       <h2>Join Trip</h2>
       <input

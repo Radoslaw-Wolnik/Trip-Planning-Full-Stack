@@ -14,7 +14,7 @@ const tripSchema = new mongoose.Schema({
   }],
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  invitationCode: String,
+  invitationCode: { type: String, length: 6},
   shareCode: { type: String, unique: true, sparse: true },
   activeEditors: { type: Number, default: 0 }
 });

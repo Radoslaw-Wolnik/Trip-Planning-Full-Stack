@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createTrip, deleteTrip, getUserTrips } from '../services/api';
+import { createTrip, deleteTrip, getUserTrips, joinTrip } from '../services/api';
 import { useModal } from '../hooks/useModal';
 import Modal from '../components/Modal';
 import CreateTripForm from '../components/CreateTripForm';
 import TripList from '../components/TripList';
 import { useAuth } from '../hooks/useAuth';
-import { Trip } from '../types';
+import { Trip, TripData } from '../types';
 
 
 const TripListPage: React.FC = () => {
@@ -48,7 +48,7 @@ const TripListPage: React.FC = () => {
     );
   };
 
-  const confirmCreateTrip = async (newTrip: { title: string; startDate: string; endDate: string }) => {
+  const confirmCreateTrip = async (newTrip: TripData) => {
     try {
       const response = await createTrip(newTrip);
       await fetchTrips();
@@ -79,6 +79,17 @@ const TripListPage: React.FC = () => {
     }
   };
 
+  const handleJoinTrip = async (invitationCode: string) => {
+    try {
+      await joinTrip(invitationCode);
+      // Refresh trips after joining
+      fetchTrips();
+    } catch (error) {
+      console.error('Error joining trip:', error);
+      alert('Failed to join trip. Please check the invitation code.');
+    }
+  };
+
   return (
     <div>
       <h1>My Trips</h1>
@@ -88,6 +99,18 @@ const TripListPage: React.FC = () => {
       <Modal isModalOpen={isModalOpen} onClose={closeModal}>
         {modalContent}
       </Modal>
+      <div className="join-trip">
+        <input
+          type="text"
+          placeholder="Enter 6-letter invitation code"
+          maxLength={6}
+          onChange={(e) => {
+            if (e.target.value.length === 6) {
+              handleJoinTrip(e.target.value);
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };
