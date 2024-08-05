@@ -43,7 +43,7 @@ export const deleteTrip = async (req, res) => {
 
     // Check if the logged-in user is the owner of the trip
     if (trip.creator.toString() === userId) {
-      await trip.remove();
+      await Trip.findByIdAndDelete(tripId);
       return res.status(200).json({ message: 'Trip deleted successfully' });
     }
 
