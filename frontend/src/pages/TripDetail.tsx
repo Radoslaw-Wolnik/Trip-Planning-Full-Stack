@@ -18,12 +18,16 @@ const TripDetail: React.FC = () => {
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(false);
+  const [activeEditors, setActiveEditors] = useState(0);
 
+  // Modify the fetchTripData function
   const fetchTripData = useCallback(async () => {
     if (id) {
       try {
         const response = await getTripDetails(id);
         setTrip(response.data);
+        setActiveEditors(response.data.activeEditors || 0);
+        setIsRealTimeEnabled(activeEditors >= 2); // it can be taken from response.data.activeEditors
         if (response.data.startDate) {
           setSelectedDate(new Date(response.data.startDate));
         }
@@ -33,35 +37,63 @@ const TripDetail: React.FC = () => {
     }
   }, [id]);
 
+  // Modify the useEffect for socket connection
   useEffect(() => {
-    if (socket && id) {
-      socket.on('enable-real-time', (enabled: boolean) => {
+    if (id && !socket) {
+      const newSocket = io('http://localhost:5001');
+      setSocket(newSocket);
+
+      newSocket.on('connect', () => {
+        newSocket.emit('join-trip', id);
+        console.log('Socket connected and joined trip:', id);
+      });
+
+      newSocket.on('trip-updated', (updatedTrip: Trip) => {
+        console.log('Trip updated from socket:', updatedTrip);
+        setTrip(updatedTrip);
+        // setActiveEditors(updatedTrip.activeEditors || 0);
+      });
+
+      newSocket.on('enable-real-time', (enabled: boolean) => {
+        console.log('Real-time enabled:', enabled);
         setIsRealTimeEnabled(enabled);
       });
-  
-      // Cleanup function
+
+      newSocket.on('disconnect', () => {
+        console.log('Socket disconnected');
+      });
+
       return () => {
-        socket.off('enable-real-time');
+        newSocket.disconnect();
       };
     }
-  }, [socket, id]);
+  }, [id]);
 
+  
+  // Modify the handleJoinTripEdit function
   const handleJoinTripEdit = useCallback(async () => {
     if (id && socket) {
       try {
-        await joinTripEdit(id);
+        const response = await joinTripEdit(id);
+        setActiveEditors(response.data.activeEditors);
         socket.emit('editor-joined', id);
+        console.log('Editor joined:', id);
       } catch (error) {
         console.error('Error joining trip edit:', error);
       }
     }
   }, [id, socket]);
-  
+
+  // Modify the handleLeaveTripEdit function
   const handleLeaveTripEdit = useCallback(async () => {
     if (id && socket) {
       try {
-        await leaveTripEdit(id);
+        const response = await leaveTripEdit(id);
+        setActiveEditors(response.data.activeEditors);
         socket.emit('editor-left', id);
+        socket.disconnect();
+        setSocket(null);
+        console.log('Editor left:', id);
       } catch (error) {
         console.error('Error leaving trip edit:', error);
       }
@@ -70,49 +102,42 @@ const TripDetail: React.FC = () => {
 
   useEffect(() => {
     fetchTripData();
-    handleJoinTripEdit();
+  }, []);
 
+
+  // useEffect for handling component unmount:
+  useEffect(() => {
     return () => {
-      handleLeaveTripEdit();
-      if (socket) {
-        socket.disconnect();
+      if (isEditMode) {
+        handleLeaveTripEdit();
       }
     };
-  }, [fetchTripData, handleJoinTripEdit, handleLeaveTripEdit, socket]);
+  }, [isEditMode, handleLeaveTripEdit]);
 
-  useEffect(() => {
-    if (isRealTimeEnabled && !socket && id) {
-      const newSocket = io('http://localhost:5001');
-      setSocket(newSocket);
-
-      newSocket.on('connect', () => {
-        newSocket.emit('join-trip', id);
-      });
-
-      newSocket.on('trip-updated', (updatedTrip: Trip) => {
-        setTrip(updatedTrip);
-      });
-
-      newSocket.on('enable-real-time', (enabled: boolean) => {
-        setIsRealTimeEnabled(enabled);
-      });
-
-      return () => {
-        newSocket.disconnect();
-      };
-    } else if (!isRealTimeEnabled && socket) {
-      socket.disconnect();
-      setSocket(null);
-    }
-  }, [isRealTimeEnabled, id, socket]);
+  
+  // Call handleJoinTripEdit when entering edit mode
+  const handleEdit = () => {
+    setIsEditMode(true);
+    handleJoinTripEdit();
+  };
 
   const handleUpdateTrip = async (updatedData: updateTripData) => {
     if (id) {
       try {
-        const response = await updateTrip(id, updatedData);
+        console.log(updatedData);
+        const dataToSend = {
+          title: updatedData.title,
+          description: updatedData.description,
+          startDate: updatedData.startDate,
+          endDate: updatedData.endDate,
+          places: updatedData.places
+        };
+        console.log(dataToSend);
+        const response = await updateTrip(id, dataToSend);
         setTrip(response.data);
         if (isRealTimeEnabled && socket) {
-          socket.emit('update-trip', { tripId: id, ...updatedData });
+          socket.emit('update-trip', { tripId: id, ...dataToSend });
+          console.log('Trip update emitted:', { tripId: id, ...dataToSend });
         }
       } catch (error) {
         console.error('Error updating trip:', error);
@@ -120,7 +145,7 @@ const TripDetail: React.FC = () => {
     }
   };
 
-  const handleEdit = () => setIsEditMode(true);
+  // Call handleLeaveTripEdit when saving changes
   const handleSave = async () => {
     if (trip) {
       await handleUpdateTrip({
@@ -131,6 +156,7 @@ const TripDetail: React.FC = () => {
         places: trip.places
       });
       setIsEditMode(false);
+      handleLeaveTripEdit();
     }
   };
 

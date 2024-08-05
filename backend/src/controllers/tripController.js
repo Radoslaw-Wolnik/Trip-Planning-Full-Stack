@@ -3,6 +3,12 @@ import User from '../models/User.js';
 // it was an overkill to use crypto for invitation codes, insted we use helper function to generate them
 import crypto from 'crypto';
 import { generateInvitationCode } from '../utils/generateInvitationCode.js';
+import { updateRealTimeStatus } from '../socketio/socketServer.js';
+
+import { createClient } from 'redis';
+
+const redisClient = createClient({ url: process.env.REDIS_URL });
+redisClient.connect();
 
 
 export const createTrip = async (req, res) => {
@@ -207,6 +213,7 @@ export const joinTrip = async (req, res) => {
 
 // socket io dependent
 export const joinTripEdit = async (req, res) => {
+  console.log("joining trip edit - to socket");
   try {
     const tripId = req.params.id;
     const trip = await Trip.findByIdAndUpdate(
@@ -219,7 +226,12 @@ export const joinTripEdit = async (req, res) => {
       return res.status(404).json({ message: 'Trip not found' });
     }
 
+    console.log("update socket real-time status idk why");
+    // Update real-time status
+    await updateRealTimeStatus(tripId);
+
     res.json({ activeEditors: trip.activeEditors });
+    console.log("active users editing this trip: ", trip.activeEditors);
   } catch (error) {
     console.error('Error joining trip edit:', error);
     res.status(500).json({ message: 'Server error' });
@@ -238,6 +250,9 @@ export const leaveTripEdit = async (req, res) => {
     if (!trip) {
       return res.status(404).json({ message: 'Trip not found' });
     }
+
+    // Update real-time status
+    await updateRealTimeStatus(tripId);
 
 
     res.json({ activeEditors: trip.activeEditors });
@@ -272,11 +287,18 @@ export const updateTrip = async (req, res) => {
     );
 
     // Only emit socket event if there are 2 or more active editors
+    //if (updatedTrip.activeEditors >= 2) {
+    //  emitTripUpdate(req.params.id, updatedTrip);
+    //}
     if (updatedTrip.activeEditors >= 2) {
-      req.app.get('io').to(req.params.id).emit('trip-updated', updatedTrip);
+      await redisClient.publish('tripUpdates', JSON.stringify({
+        tripId: req.params.id,
+        updatedData: updatedTrip
+      }));
     }
 
-    res.json(updatedTrip);
+
+    res.status(200).send(updatedTrip);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');

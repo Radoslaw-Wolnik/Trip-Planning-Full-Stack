@@ -128,7 +128,7 @@ export const logout = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
   console.log("backend is trying");
-  console.log('data: ', req.user);
+  //console.log('data: ', req.user);
 
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -136,7 +136,8 @@ export const getUserProfile = async (req, res) => {
       console.log('user not found ughhh');
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log('user found:', user);
+    //console.log('user found:', user);
+    console.log("user found succesfully");
     res.json(user);
   } catch (error) {
     console.error('Error fetching user profile:', error);

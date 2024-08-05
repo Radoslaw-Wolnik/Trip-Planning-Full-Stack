@@ -5,7 +5,37 @@ import dotenv from 'dotenv';
 import Trip from '../models/Trip.js';
 import connectDB from '../config/database.js';
 
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+
+
 dotenv.config();
+
+const redisClient = createClient({ url: process.env.REDIS_URL });
+
+const pubClient = redisClient;
+const subClient = pubClient.duplicate();
+
+(async () => {
+  try {
+    // Connect both clients
+    await Promise.all([pubClient.connect(), subClient.connect()]);
+
+    // Setup the Redis adapter for Socket.IO
+    io.adapter(createAdapter(pubClient, subClient));
+    
+    // Subscribe to 'tripUpdates' channel
+    subClient.subscribe('tripUpdates', (message) => {
+      const { tripId, updatedData } = JSON.parse(message);
+      io.to(tripId).emit('trip-updated', updatedData);
+    });
+
+    console.log('Redis clients connected and subscribed to tripUpdates');
+  } catch (err) {
+    console.error('Failed to connect to Redis:', err);
+  }
+})();
+
 
 const PORT = process.env.SOCKET_PORT || 5001;
 
@@ -20,7 +50,9 @@ const io = new Server(server, {
   },
 });
 
-const updateRealTimeStatus = async (tripId) => {
+io.adapter(createAdapter(pubClient, subClient));
+
+export const updateRealTimeStatus = async (tripId) => {
   try {
     const trip = await Trip.findById(tripId);
     if (trip) {
@@ -68,6 +100,10 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 });
+
+//export const emitTripUpdate = (tripId, updatedData) => {
+//  io.to(tripId).emit('trip-updated', updatedData);
+//};
 
 server.listen(PORT, () => {
   console.log(`Socket.IO server running on port ${PORT}`);
