@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { TripData } from '../types';
 
 interface CreateTripFormProps {
-  onSubmit: (trip: { title: string; startDate: string; endDate: string }) => void;
+  onSubmit: (trip: TripData) => void;
   onCancel: () => void;
 }
 
@@ -12,7 +13,7 @@ const CreateTripForm: React.FC<CreateTripFormProps> = ({ onSubmit, onCancel }) =
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ title, startDate, endDate });
+    onSubmit({ title, startDate, endDate, places: [] });
   };
 
   return (
