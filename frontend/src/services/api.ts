@@ -1,6 +1,6 @@
 // frontend/src/services/api.ts
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosHeaders, AxiosError, AxiosResponse, AxiosRequestConfig } from 'axios';
-import { User, FullUser, Trip, Credentials, UserData, TripData, updateTripData } from '../types';
+import { User, FullUser, Trip, Credentials, UserData, TripData, updateTripData, ExtTrip } from '../types';
 
 const API_URL = "http://localhost:5000/api";
 
@@ -99,7 +99,7 @@ export const getTrips = (): Promise<AxiosResponse<Trip[]>> =>
 
 
 
-export const getTripDetails = (id: string): Promise<AxiosResponse<Trip>> => 
+export const getTripDetails = (id: string): Promise<AxiosResponse<ExtTrip>> => 
   typedApi.get(`/trips/${id}`);
 
 export const deleteTrip = (id: string): Promise<AxiosResponse<void>> => 

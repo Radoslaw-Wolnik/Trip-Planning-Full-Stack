@@ -28,6 +28,10 @@ export interface User {
     sharedWith: User[];
     invitationCode?: string;
   }
+
+  export interface ExtTrip extends Trip {
+    activeEditors: number;
+  }
   
   // You can also include the request payload interfaces here if you want them to be globally available
   export interface Credentials {
