@@ -261,7 +261,7 @@ export const updateTrip = async (req, res) => {
 
     if (!trip) return res.status(404).json({ message: 'Trip not found' });
 
-    if (trip.creator.toString() !== req.user.id) {
+    if (trip.creator.toString() !== req.user.id && !trip.sharedWith.includes(req.user.id)) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
