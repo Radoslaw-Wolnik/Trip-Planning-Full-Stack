@@ -15,7 +15,7 @@
 
 <details>
 
-<summary><span style="font-size: 1.5em; font-weight: 600;">Structure:</span></summary>
+<summary><h2>Structure:</h2></summary>
 
 ```bash
   main dir/
