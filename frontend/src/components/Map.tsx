@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
-// the problem was using MArkers with react in Strict mode doesnt work insted usage of MarkerF
+// the problem was using Markers with react in Strict mode doesnt work insted usage of MarkerF
 import { Place } from '../types';
+import enviorement from '../config/enviorement';
 
 // API Key should be securely handled
-const API_KEY = 'AIzaSyARi-kUu_m7dTo5nXxLjPfiueU8iC4EIAU';
+//const API_KEY = '';
 
 interface MapProps {
   places: Place[];
@@ -18,7 +19,7 @@ const mapContainerStyle = {
 
 const Map: React.FC<MapProps> = ({ places, onMapClick }) => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: API_KEY,
+    googleMapsApiKey: enviorement.GOOGLE_MAPS_API_KEY,
   });
 
  // Memoize the center of the map
