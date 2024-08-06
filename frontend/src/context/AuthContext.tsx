@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { login as apiLogin, logout as apiLogout, register as apiRegister, getMe } from '../services/api';
+import { login as apiLogin, logout as apiLogout, register as apiRegister, getMe, ApiError } from '../services/api';
 import { FullUser } from '../types';
 
 
@@ -7,7 +7,7 @@ export interface AuthContextType {
   user: FullUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, username: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string) => Promise<string>;
   logout: () => Promise<void>;
   updateCurrentUser: (updatedUser: FullUser) => void;
 }
@@ -45,24 +45,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('token', response.data.token);
       await fetchUserData();
     } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
+      if (error instanceof ApiError) {
+        throw error;
+      } else {
+        throw new Error('An unexpected error occurred during login');
+      }
     }
   }, [fetchUserData]);
 
   const register = useCallback(async (email: string, username: string, password: string) => {
     try {
       const response = await apiRegister({ email, username, password });
-      //localStorage.setItem('token', response.data.token);
-
-      console.log(response);
-      await login(email, password);
-      //await fetchUserData();
+      // You might want to set some state here to indicate successful registration
+      // For example: setRegistrationSuccess(true);
+      // but that would be global and i dont need it i think
+      return response.data.message;
     } catch (error) {
-      console.error('Registration failed:', error);
-      throw error;
+      if (error instanceof ApiError) {
+        throw error;
+      } else {
+        throw new Error('An unexpected error occurred during registration');
+      }
     }
-  }, [fetchUserData]);
+  }, []);
 
   const logout = useCallback(async () => {
     try {

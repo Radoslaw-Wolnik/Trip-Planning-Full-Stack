@@ -19,6 +19,12 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Check if username is already taken
+    user = await User.findOne({ username });
+    if (user) {
+      return res.status(401).json({ message: 'Username already exists' });
+    }
+
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -38,8 +44,9 @@ export const register = async (req, res) => {
 
     await user.save();
 
-    // Send verification email - this doesnt work right now ------------------------------------------ <- 
-    const verificationUrl = `${env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    const verificationUrl = `${env.FRONTEND}/verify-email/${verificationToken}`;
+    console.log('Attempting to send email to:', user.email);
+    console.log('Verification URL:', verificationUrl);
     await sendEmail({
       to: user.email,
       subject: 'Verify Your Email',
@@ -50,10 +57,14 @@ export const register = async (req, res) => {
         <p>This link will expire in 24 hours.</p>
       `
     });
+    console.log('Email sent successfully');
 
     res.status(201).json({ message: 'User registered. Please check your email to verify your account.' });
   } catch (error) {
-    console.error('Server error during registration:', error);
+    console.error('Error in registration process:', error);
+    if (error.response) {
+      console.error('Email service response:', error.response.body);
+    }
     res.status(500).send('Server error');
   }
 };
@@ -68,10 +79,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Check if email is verified ------------------- does not return correct message but definitly stops from login in
-    //if (!user.isVerified) {
-    //  return res.status(401).json({ message: 'Please verify your email before logging in' });
-    //}
+    // Check if email is verified ------- disable for dev if using multiple accounts that u dont have emails for
+    if (!user.isVerified) {
+      return res.status(401).json({ message: 'Please verify your email before logging in' });
+    }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
@@ -209,14 +220,20 @@ export const sendVerificationEmail = async (req, res) => {
 
     const verificationToken = crypto.randomBytes(20).toString('hex');
     user.verificationToken = verificationToken;
+    user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours from now
     await user.save();
 
-    const verificationUrl = `${env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    const verificationUrl = `${env.FRONTEND}/verify-email/${verificationToken}`;
     
     await sendEmail({
       to: user.email,
       subject: 'Verify Your Email',
-      text: `Please click on this link to verify your email: ${verificationUrl}`
+      html: `
+        <h1>Verify Your Email</h1>
+        <p>Please click the link below to verify your email address:</p>
+        <a href="${verificationUrl}">${verificationUrl}</a>
+        <p>This link will expire in 24 hours.</p>
+      `
     });
 
     res.json({ message: 'Verification email sent' });

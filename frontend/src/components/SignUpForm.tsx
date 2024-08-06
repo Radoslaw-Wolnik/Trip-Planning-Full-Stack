@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useModal } from '../hooks/useModal';
+import { ApiError } from '../services/api';
 
 const SignUpForm: React.FC = () => {
   const [userData, setUserData] = useState({email: '', username: '', password: '' });
   const [error, setError] = useState('');
-//  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState('');
+//const navigate = useNavigate();
   const { register } = useAuth();
   const { closeModal } = useModal();
 
@@ -17,12 +19,22 @@ const SignUpForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
+    setSuccessMessage('');
     try {
-      await register(userData.email, userData.username, userData.password);
-      closeModal();
-//      navigate('/trips'); // Redirect to trips page after successful registration
+      const message = await register(userData.email, userData.username, userData.password);
+      setSuccessMessage(message);
+      // Optionally close the modal after a delay
+      setTimeout(() => closeModal(), 3000);
+      // navigate('/trips'); // Redirect to trips page after successful registration
     } catch (error) {
-      setError('Registration failed. Please try again.');
+      if (error instanceof ApiError) {
+        setError(error.message);
+      } else if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 
@@ -30,6 +42,7 @@ const SignUpForm: React.FC = () => {
     <div>
       <h2>Sign Up</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email:</label>

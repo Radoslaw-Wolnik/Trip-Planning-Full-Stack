@@ -78,14 +78,49 @@ typedApi.interceptors.response.use(
 );
 
 // API functions with proper typing
-export const login = (credentials: Credentials): Promise<AxiosResponse<{ token: string; user: User }>> => 
-  typedApi.post('/users/login', credentials);
+//export const login = (credentials: Credentials): Promise<AxiosResponse<{ token: string; user: User }>> => 
+//  typedApi.post('/users/login', credentials);
+
+export const login = async (credentials: Credentials): Promise<AxiosResponse<{ token: string; user: User }>> => {
+  try {
+    const response = await typedApi.post<{ token: string; user: User }>('/users/login', credentials);
+    return response;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      switch (error.statusCode) {
+        case 400:
+          throw new ApiError(400, 'Invalid credentials');
+        case 401:
+          throw new ApiError(401, 'Please verify your email before logging in');
+        default:
+          throw new ApiError(error.statusCode, 'An error occurred during login');
+      }
+    }
+    throw error;
+  }
+};
 
 export const logout = (): Promise<AxiosResponse<void>> => 
   typedApi.post('/users/logout');
 
-export const register = (userData: UserData): Promise<AxiosResponse<User>> => 
-  typedApi.post('/users/register', userData);
+export const register = async (userData: UserData): Promise<AxiosResponse<{ message: string }>> => {
+  try {
+    const response = await typedApi.post<{ message: string }>('/users/register', userData);
+    return response;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      switch (error.statusCode) {
+        case 400:
+          throw new ApiError(400, 'Email already in use');
+        case 401:
+          throw new ApiError(400, 'Username already taken');
+        default:
+          throw new ApiError(error.statusCode, 'An error occurred during registration');
+      }
+    }
+    throw error;
+  }
+};
 
 export const createTrip = (tripData: TripData): Promise<AxiosResponse<Trip>> => 
   typedApi.post('/trips', tripData);

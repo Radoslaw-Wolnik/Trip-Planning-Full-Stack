@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useModal } from '../hooks/useModal';
 import { Credentials } from '../types';
+import { ApiError } from '../services/api';
 
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState<Credentials>({ email: '', password: '' });
@@ -20,10 +21,17 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     try {
       await login(credentials.email, credentials.password);
+      // Handle successful login
       closeModal();
-      //navigate('/trips'); // redirect to trips after succesfull login
+      // navigate /trips after succesfull login
     } catch (error) {
-      setError('Invalid credentials. Please try again.');
+      if (error instanceof ApiError) {
+        setError(error.message);
+      } else if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 

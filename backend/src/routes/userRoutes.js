@@ -15,6 +15,7 @@ router.get('/me', authenticateToken, getUserProfile);
 
 router.put('/upload-profile-picture', authenticateToken, upload.single('profilePicture'), uploadProfilePicture);
 router.put('/change-password', authenticateToken, changePassword);
+
 router.post('/send-verification', authenticateToken, sendVerificationEmail);
 router.get('/verify-email/:token', verifyEmail);
 
