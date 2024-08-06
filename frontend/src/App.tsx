@@ -7,6 +7,7 @@ import LandingPageLayout from './layouts/LandingPageLayout'
 import Home from './pages/Home';
 import About from './pages/About';
 import MainFunction from './pages/MainFunction';
+import VerifyEmail from './pages/VerifyEmail';
 
 import TripList from './pages/TripListPage';
 import TripDetail from './pages/TripDetail';
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: '/about', element: <About /> },
       { path: '/main', element: <MainFunction /> },
+      { path: '/verify-email/:token', element: <VerifyEmail /> },
       { 
         path: '/trips', 
         element: <ProtectedRoute><TripList /></ProtectedRoute> 
