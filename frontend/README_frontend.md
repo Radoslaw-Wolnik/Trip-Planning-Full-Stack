@@ -182,3 +182,13 @@ npm run build
 default build for vite is saved in diff folder then build - change in vite.config.ts
 
 153.4Mb build
+
+
+## TODO 
+- [ ] check the enviorement variables and idk if use process.sth... or import envioremnt and envioremnet.sth (will use scnd one)
+- [ ] when adding poin i dont want to just click on map i want to see things first (from google map you can click and it pops with details about place that you can check, photos etc i want that when clicking on map) and then an add button that adds to the list
+- [ ] more defined day up over the map to change day that yure adding to place
+- [ ] recover account
+- [ ] add function to drag place up in the list or down and it should properly change the number
+- [ ] after deleting place change the order of other places (decrement numbers)
+- [ ] Tailwind CSS make the site prettier

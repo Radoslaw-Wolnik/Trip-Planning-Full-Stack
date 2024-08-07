@@ -96,11 +96,7 @@ docker-compose build --no-cache    # build without cache
 docker-compose up --force-recreate # force recreate
 ```
 
-#### downscaling
-if one wants to use project without email verification one needs to comment out  
-/main-dir/backend/src/userController  
-login: to not check if verified email in db  
-register: to not send an email  
+
 
 ## Technologies Used:
  - **Bakcend:** Node.js + express + ES6 modules
@@ -173,6 +169,7 @@ register: to not send an email
   ├── .gitgnore
   ├── docker-compose-prod.yml
   ├── docker-compose.yml
+  ├── LICENSE
   └── README.md
   ```
 
@@ -184,23 +181,31 @@ register: to not send an email
   - the env files that currently are not best structured but should be: /backend/.env and /frontend/.env and /.env for docker-compose.yml
   - to see the .env contest go to /backend/src/config/enviorement.js, same for frontend, the only one not visible is /.env and idk if it should
   - for more in depth explonation go to /frontend/README or /backend/README
+  - as per docker-compose we make volumes that mount directly from ... and persist across the builds of containers (so the data from the db is not removed when deleting the containers)
 </details>
 
 ------------------------------------
 ## Contributing
-lorem ipsum
+This project is primarily a personal learning exercise. However, if you spot any bugs or have suggestions for improvements, feel free to open an issue or submit a pull request. 
+
+If you'd like to contribute:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please note that as this is a personal learning project, there might be some delay before branches being merged.
 
 ## Licence
-lorem ipsum
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## TODO:
 - [ ] deployment
-- [x] main readme
 - [ ] readme frontend
-- [ ] readme backend
 - [ ] check .env in frontend
 - [ ] forgotten password page (one time magic link to change pass)
-- [ ] https insted of http i gues security and cryptography lol
 
 ## Special Thanks:
  - **claude.ai** - by Anthropic - much better at explaining code then my uni profs
