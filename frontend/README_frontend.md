@@ -1,15 +1,148 @@
-# React + TypeScript + Vite
-------------------------------------------------- AUTO GEN -------------------------------------------------
+# Frontend documentation
+
+## Introduction
+*This is frontend for trip managing website*  
+*Go to [main README](../README.md) for more general information*  
 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+#### FUNCTIONS
+ - connect to the backend (api)
+ - session tracking (Auth)
+ - user login/logout/registration
+ - list of trips (users and shared)
+ - profile page (with profile picture, user created trips, change password)
+ - detail trip page with edit mode and possibility to colaborate real time and sharing link (view only) and inviting to edit for other users in service
+ - login/logout/others modal that is on top of any page
+ - protected pages that when accessed without credentials will show login/register modal
+ - home/about
+ - see shared trip (view only)
+ - header with navbar and footer and inside any page that is accessed
 
+
+#### DISCLAIMER  
+default build for vite is saved in diff folder then build - change in vite.config.ts
+
+#### additional for dev
+in react strict mode dont use Marker insted use MarkerF 
+
+## Technologies Used:
+ - **Framework:** React
+ - **Language:** TypeScript
+ - **Build Tool:** Vite
+ - **Compiler:** SWC
+ - **Linter:** ESLint
+
+## Docker containers:
+ - **frontend** - client
+
+<details>
+<summary><h2>Structure:</h2></summary>
+
+```bash
+my-fullstack-app/
+├── backend/
+│   ├── Dockerfile
+│   ├── Dockerfile.socketio
+│   └── ...
+├── frontend/
+│   ├── .env
+│   ├── .eslintrc.cjs
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README_frontend
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts
+│   ├── build/
+│   │   ├── ...
+│   │   └── ...
+│   ├── node_modules/
+│   │   ├── ...
+│   │   └── ...
+│   ├── public/
+│   │   ├── index.html         # should be here but its not
+│   │   └── ...
+│   └─── src/
+│       ├── App.js
+│       ├── index.css
+│       ├── main.tsx
+│       ├── types.ts
+│       ├── vite-env.d.ts
+│       ├── assets/             # website assets - can be in public
+│       │   ├── ...
+│       │   └── buy.json
+│       ├── components/
+│       │   ├── CreateTripForm.tsx
+│       │   ├── Footer.tsx
+│       │   ├── Header.tsx
+│       │   ├── LoginForm.tsx
+│       │   ├── Map.tsx
+│       │   ├── Modal.tsx
+│       │   ├── Product.tsx
+│       │   ├── ProtectedRoute.tsx
+│       │   ├── RecoveryPasswordForm.tsx
+│       │   ├── ShareTrip.tsx
+│       │   ├── SingUpForm.tsx
+│       │   └── TripList.tsx
+│       ├── config/
+│       │   └── enviorement.ts
+│       ├── context/
+│       │   ├── AuthContext.tsx
+│       │   ├── TripContext.tsx  # delete
+│       │   └── ModalContext.tsx
+│       ├── hooks/
+│       │   ├── useAuth.ts
+│       │   └── useModal.ts           
+│       ├── layouts/
+│       │   └── LandingPageLayout.tsx           
+│       ├── pages/
+│       │   ├── About.tsx
+│       │   ├── Home.tsx
+│       │   ├── MainFunction.tsx
+│       │   ├── Profile.tsx
+│       │   ├── SharedTripView.tsx
+│       │   ├── TripDetail.tsx
+│       │   ├── TripListPage.tsx
+│       │   └── VerifyEmail.tsx            
+│       ├── services/
+│       │   └── api.ts          
+│       ├── style/              # there is not much, it will be all changed
+│       │   ├── ...
+│       │   ├── All.css
+│       │   ├── Fototer.css
+│       │   └── Modal.css 
+│       └── utils/
+│           └── imageUtils.ts
+├── docker-compose.yml
+└── ...
+```
+
+#### Key takes:
+ - 
+ - 
+ - 
+</details>
+
+## TODO 
+ - [ ] check the enviorement variables and idk if use process.sth... or import envioremnt and envioremnet.sth (will use scnd one)
+ - [ ] recover acc - forgotten password page (one time magic link to change pass)
+####
+ - [ ] when adding poin i dont want to just click on map i want to see things first (from google map you can click and it pops with details about place that you can check, photos etc i want that when clicking on map) and then an add button that adds to the list
+ - [ ] more defined day up over the map to change day that yure adding to place
+ - [ ] add function to drag place up in the list or down and it should properly change the number
+ - [ ] after deleting place change the order of other places (decrement numbers)
+####
+ - [ ] Tailwind CSS make the site prettier  (or Saas)
+
+
+## Additional info for future mby important not sure
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+#### Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
@@ -31,164 +164,7 @@ export default {
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
-
-------------------------------------------------- SETUP -------------------------------------------------
-
-
-PS C:\Users\rados\Github\blog> npm create vite@latest blog --template react-ts
-Need to install the following packages:
-create-vite@5.2.3
-Ok to proceed? (y) y
-
-
-> npx
-> create-vite blog react-ts
-
-√ Select a framework: » React
-√ Select a variant: » TypeScript + SWC
-
-Scaffolding project in C:\Users\rados\Github\blog\blog...
-
-Done. Now run:
-
-  cd blog
-  npm install
-  npm run dev
-
-PS C:\Users\rados\Github\blog>
-
-
-Insted of stinky old npm create-react-app we will use Vite (fancy)
-React + Typescript (Javascript with types) + SWC - compiler for javascript to make it more efficient
-
-install ESLint extention to VSCode to make necessary highlights to syntax
-also some folks dont use TypeScript insted they use Prettier: 
-alterations to do so:
-> npm rm @types/react @types/react-dom   #- removes typescript
-> npm i -D -E prettier #- install prettier
-> create file .prettierrc and paste following: 
-{
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "es5"
-}
-> npm i -D eslint-config-prettier
-> package.json  # change
-"format": "prettier --write ./src",
-
-install Prettier plugin for VS Code.
-
-entire tutorial: 
-https://medium.com/@nedopaka/setup-a-react-vite-project-with-swc-prettier-vitest-2024-62ecff357c7b
-but we're not doing that here
-
-------------------------------------------------- PROJECT -------------------------------------------------
-
-
-> npm run dev
-to start development server on https://localhost:5173/
-
-------------------------------------------------- LINKS -------------------------------------------------
-https://www.youtube.com/watch?v=SLfhMt5OUPI - navbar + footer proper way
-https://www.youtube.com/watch?v=Vv36C02RMlY - javascrit grocery store project GeeksForGeeks
-https://www.youtube.com/watch?v=pfaSUYaSgRo - Taiwind CSS tutorial
-https://www.youtube.com/watch?v=F2JCjVSZlG0&list=PL41PQx5PPbt6OheJQkg-QNROfx9j75MuR
-https://www.youtube.com/watch?v=sfmL6bGbiN8&list=PL41PQx5PPbt6OheJQkg-QNROfx9j75MuR&index=2
-https://www.youtube.com/watch?v=L02BfvA7mgA&list=PL41PQx5PPbt6OheJQkg-QNROfx9j75MuR&index=4
-
-
------ navbar
-https://www.geeksforgeeks.org/how-to-create-a-simple-responsive-footer-in-react-js/
-https://devzibah.hashnode.dev/how-to-avoid-redundancy-through-the-use-of-layout-components-in-react
-https://dev.to/dindustack/hide-show-navbar-and-footer-in-react-application-1nip
-https://blog.logrocket.com/create-responsive-navbar-react-css/
-
-
-
 ----- Docker things ---- 
 docker-compose up --build
 docker run -p 3000:3000 frontend-app
 docker build -t frontend-app .
-
----- runs
-npm run dev
-npm start
-When you run npm run dev locally for your frontend:
-
-    Development Environment: It uses the development server provided by react-scripts or any custom setup you have configured. This includes hot reloading and other development tools.
-
-    Isolation: It runs the frontend development server independently of any backend services unless your frontend makes API calls to a backend that's also running locally or in another environment.
-
-    If you're trying to run a development server for your frontend application using npm scripts, the command you typically use is npm run dev or npm start depending on how it's configured in your package.json file.
-Running npm run dev for Frontend
-
-Assuming you're inside the frontend directory of your project structure (main_folder/frontend), here's what you can do:
-
-    Navigate to the frontend directory:
-
-    Open your terminal or command prompt and change directory to your frontend directory:
-
-    sh
-
-cd path/to/main_folder/frontend
-
-Run the development server:
-
-Use npm run dev or npm start, depending on how your package.json is configured:
-
-sh
-
-npm run dev
-
-or
-
-sh
-
-    npm start
-
-        If you've configured npm run dev or npm start correctly in your package.json, this command will start the development server for your React application.
-
-    Accessing Your Application:
-
-    Once the development server starts, you can access your frontend application in a web browser:
-        Open a browser and go to http://localhost:3000 (assuming your React app runs on port 3000 by default).
-
-Differences from Docker Compose
-
-When you run npm run dev locally for your frontend:
-
-    Development Environment: It uses the development server provided by react-scripts or any custom setup you have configured. This includes hot reloading and other development tools.
-
-    Isolation: It runs the frontend development server independently of any backend services unless your frontend makes API calls to a backend that's also running locally or in another environment.
-
-Integrating with Docker Compose
-
-If you choose to run your frontend and backend services using Docker Compose (as previously discussed), you'll run the entire application stack (frontend, backend, and any other services) within Docker containers. This provides a more consistent and reproducible environment across different machines and deployments.
-
-Local Development: Running npm run dev or npm start locally in your frontend directory starts the development server for your React application.
-
-Docker Compose: Docker Compose orchestrates multiple containers (e.g., frontend, backend, database) together, providing a unified environment for development, testing, and deployment.
-
-docker-compose up --build
-docker-compose down
-
-Frontend: Open a web browser and go to http://localhost:3000 to see your React frontend.
-Backend: If your frontend makes API calls to the backend, ensure it uses http://backend:5001 (assuming backend is the service name defined in docker-compose.yml).
-
-
-Also !!
-Yes, before deploying your frontend application using Docker, it's generally a good practice to create a production build of your application using 
-npm run build
-default build for vite is saved in diff folder then build - change in vite.config.ts
-
-153.4Mb build
-
-
-## TODO 
-- [ ] check the enviorement variables and idk if use process.sth... or import envioremnt and envioremnet.sth (will use scnd one)
-- [ ] when adding poin i dont want to just click on map i want to see things first (from google map you can click and it pops with details about place that you can check, photos etc i want that when clicking on map) and then an add button that adds to the list
-- [ ] more defined day up over the map to change day that yure adding to place
-- [ ] recover account
-- [ ] add function to drag place up in the list or down and it should properly change the number
-- [ ] after deleting place change the order of other places (decrement numbers)
-- [ ] Tailwind CSS make the site prettier

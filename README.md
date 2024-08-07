@@ -2,7 +2,7 @@
 *This is a learning project mostly in backend and docker but also in frontend and connecting services*  
 *For more in depth info go to [backend](backend/README_backend.md) or [frontend](frontend/README_frontend.md)*
 
-# Table of Contents
+## Table of Contents
 
 - [Introduction](#Introduction)
 - [Installation](#installation)
@@ -11,9 +11,9 @@
 - [Docker containers](#docker-containers)
 - [Structure](#structure)  
 ####
-- [Todo](#todo)
 - [Contributing](#contributing)
 - [License](#license)
+- [Todo](#todo)
 
 ## Introduction
 *The main focus of this project is learning but also reusability and readibility*
@@ -96,6 +96,11 @@ docker-compose build --no-cache    # build without cache
 docker-compose up --force-recreate # force recreate
 ```
 
+#### build of only one container
+```bash
+docker build -t frontend-app . # not surre will check
+```
+
 
 
 ## Technologies Used:
@@ -116,7 +121,7 @@ docker-compose up --force-recreate # force recreate
 </summary>
 
 ```bash
-  main dir/
+  main-dir/
   ├── backend/
   │   ├── node_modules/
   │   │   ├── ...
@@ -204,8 +209,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## TODO:
 - [ ] deployment
 - [ ] readme frontend
-- [ ] check .env in frontend
-- [ ] forgotten password page (one time magic link to change pass)
+
+- [ ] how to build only one container
+- [ ] change names of containers and mby links (localhost to server, client etc)
 
 ## Special Thanks:
  - **claude.ai** - by Anthropic - much better at explaining code then my uni profs

@@ -25,7 +25,7 @@ register: to not send an email
 ## Technologies Used:
  - **Framework:** Express
  - **Language** Javascript (will chnage to TS in future)
- - **Modules:** ECMAScript 6 (ES6) module system (import insted of require)
+ - **Module System:** ECMAScript 6 (ES6) (import insted of require)
 
 ## Docker containers:
  - **redis** - for better communication between containers (rn socketio and backend)
