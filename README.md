@@ -8,7 +8,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
-- [Services](#services)
+- [Docker containers](#docker-containers)
 - [Structure](#structure)  
 ####
 - [Todo](#todo)
@@ -98,9 +98,9 @@ docker-compose up --force-recreate # force recreate
 
 #### downscaling
 if one wants to use project without email verification one needs to comment out  
-/main-dir/backend/src/userController
-login: to not check if verified email in db
-register: to not send an email
+/main-dir/backend/src/userController  
+login: to not check if verified email in db  
+register: to not send an email  
 
 ## Technologies Used:
  - **Bakcend:** Node.js + express + ES6 modules
