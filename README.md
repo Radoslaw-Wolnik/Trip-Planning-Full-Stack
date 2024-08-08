@@ -188,8 +188,7 @@ Go [here](backend/API_documentation.md) for API documentation
   │   ├── nodemon.json
   │   ├── package-lock.json
   │   ├── package.json
-  │   ├── populateDB.js
-  │   └── README_backend.md
+  │   └── populateDB.js
   ├── frontend/
   │   ├── build/
   │   │   ├── ...
@@ -213,15 +212,12 @@ Go [here](backend/API_documentation.md) for API documentation
   │   ├── package.json
   │   ├── tsconfig.json
   │   ├── tsconfig.node.json
-  │   ├── vite.config.ts
-  │   └── README_frontend.md
+  │   └── vite.config.ts
   ├── .dockerignore
   ├── .env
   ├── .gitgnore
   ├── docker-compose-prod.yml
-  ├── docker-compose.yml
-  ├── LICENSE
-  └── README.md
+  └── docker-compose.yml
   ```
 
   ### Key takes:

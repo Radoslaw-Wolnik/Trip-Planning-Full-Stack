@@ -53,7 +53,6 @@ my-fullstack-app/
 │   ├── index.html
 │   ├── package-lock.json
 │   ├── package.json
-│   ├── README_frontend
 │   ├── tsconfig.json
 │   ├── tsconfig.node.json
 │   ├── vite.config.ts
@@ -122,9 +121,12 @@ my-fullstack-app/
 ```
 
 #### Key takes:
- - 
- - 
- - 
+ - build swapped from deafult dir to build
+ - custom hooks: useAuth(AuthContext) and useModal(ModalContext)
+ - services/api connection to the backend
+ - layouts/LandingPageLayout main layout for website
+ - comopnents/ProtectedRoute to hide protected routes
+ - config/enviorement enviorement variables
 </details>
 
 ## Contributing

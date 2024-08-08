@@ -54,7 +54,6 @@ my-fullstack-app/
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── populateDB.js
-│   ├── README_backend
 │   ├── node_modules/
 │   │   ├── ...
 │   │   └── ...
