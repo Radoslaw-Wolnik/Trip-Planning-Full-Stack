@@ -10,6 +10,7 @@
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
 - [Architecture](#architecture)
+- [Development Workflow](#development-workflow)
 - [API Documentation](#api-documentation)
 - [Docker containers](#docker-containers)
 - [Structure](#structure)  
@@ -115,27 +116,39 @@ docker build -t frontend-app . # not surre will check
 ```mermaid
 graph TD
   subgraph Frontend
-    Frontend
+    frontend[Frontend]
   end
 
   subgraph Backend
-    Backend -- API requests --> Frontend
-    Backend -- Websocket events --> Socket.IO
+    backend[Backend] -- "API requests" --> frontend
+    backend -- "Websocket events" --> socketio[Socket.IO]
   end
 
   subgraph Database
-    MongoDB
+    mongodb[MongoDB]
   end
 
   subgraph Caching
-    Redis
+    redis[Redis]
   end
 
-  Frontend -- API requests --> Backend
-  Frontend -- Websocket connection --> Socket.IO
-  Backend -- Database connection --> MongoDB
-  Socket.IO -- Redis Adapter --> Redis
+  frontend -- "API requests" --> backend
+  frontend -- "Websocket connection" --> socketio
+  backend -- "Database connection" --> mongodb
+  socketio -- "Redis Adapter" --> redis
 ```
+
+## Development Workflow
+
+1. Fork the repository
+2. Create a new branch for your feature
+3. Implement your changes
+4. Write or update tests as necessary
+5. Run tests: `npm test`
+6. Commit your changes using conventional commit messages
+7. Push to your fork and submit a pull request
+
+We use Git for version control and follow the GitFlow workflow.
 
 ## API Documentation
 
