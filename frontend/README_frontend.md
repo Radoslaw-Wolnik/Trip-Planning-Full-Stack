@@ -1,11 +1,11 @@
 # Frontend documentation
 
 ## Introduction
-*This is frontend for trip managing website*  
-*Go to [main README](../README.md) for more general information*  
+
+This is the frontend for our trip managing website. For more general information, see the [main README](../README.md).
 
 
-#### FUNCTIONS
+## Features
  - connect to the backend (api)
  - session tracking (Auth)
  - user login/logout/registration
@@ -19,24 +19,27 @@
  - header with navbar and footer and inside any page that is accessed
 
 
-#### DISCLAIMER  
+## Technologies Used
+
+- React (with Vite)
+- TypeScript
+- ESLint for linting
+- Google Maps API
+
+## Development Workflow
+
+1. Install dependencies: `npm install`
+2. Start development server: `npm run dev`
+3. Run tests: `npm test`
+4. Build for production: `npm run build`
+
+#### Important
 default build for vite is saved in diff folder then build - change in vite.config.ts
 
-#### additional for dev
-in react strict mode dont use Marker insted use MarkerF 
-
-## Technologies Used:
- - **Framework:** React
- - **Language:** TypeScript
- - **Build Tool:** Vite
- - **Compiler:** SWC
- - **Linter:** ESLint
-
-## Docker containers:
- - **frontend** - client
+## Project Structure
 
 <details>
-<summary><h2>Structure:</h2></summary>
+<summary>see structure tree</summary>
 
 ```bash
 my-fullstack-app/
@@ -124,6 +127,18 @@ my-fullstack-app/
  - 
 </details>
 
+## Contributing
+
+If you'd like to contribute to the frontend of this project, please follow these guidelines:
+
+1. Ensure your code follows the project's coding standards and conventions.
+2. Write or update tests for any new or modified components or functionality.
+3. Run the frontend tests using npm test.
+4. If you introduce new dependencies, ensure they are properly versioned and compatible with the project's requirements.
+5. Submit a pull request with a clear description of your changes and their purpose.
+
+We value contributions that improve the overall user experience, code quality, and learning aspects of the frontend application.
+
 ## TODO 
  - [ ] check the enviorement variables and idk if use process.sth... or import envioremnt and envioremnet.sth (will use scnd one)
  - [ ] recover acc - forgotten password page (one time magic link to change pass)
@@ -134,37 +149,3 @@ my-fullstack-app/
  - [ ] after deleting place change the order of other places (decrement numbers)
 ####
  - [ ] Tailwind CSS make the site prettier  (or Saas)
-
-
-## Additional info for future mby important not sure
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-#### Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-
------ Docker things ---- 
-docker-compose up --build
-docker run -p 3000:3000 frontend-app
-docker build -t frontend-app .

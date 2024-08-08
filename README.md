@@ -5,33 +5,33 @@
 ## Table of Contents
 
 - [Introduction](#Introduction)
+- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
+- [Architecture](#architecture)
+- [API Documentation](#api-documentation)
 - [Docker containers](#docker-containers)
 - [Structure](#structure)  
-####
 - [Contributing](#contributing)
 - [License](#license)
-- [Todo](#todo)
+- [Project Status and Roadmap](#project-status-and-roadmap)
+- [Reporting Issues](#reporting-issues)
+- [External Services](#external-services)
 
 ## Introduction
-*The main focus of this project is learning but also reusability and readibility*
-#### MAIN FUNCTIONS:
- - creatign trips with places on different days and sharing them
- - creating accounts
- - colaborating with others
-#### NECESSARY:
- - user registration + email verification (email sending)
- - forgotten password (email)
- - session tracking using JWS tokens
- - user things (change profile picture, change password)
- - trip things (create, delete, invite to edit, share view only, add place, delete place, change the order of places)
- - real time editing of trips using socket.io by multiple users at the same time
- - backend <-> frontend connection
- - backend <-> socketio connection (helped by redis)
- - backend <-> mongoDB connection
- - google maps ofc (btw dont use Marker in stric mode insted use MarkerF)
+This project is primarily a learning exercise, focusing on reusability and readability.
+
+
+## Features
+- User authentication (registration, login, logout)
+- Email verification for new accounts
+- Password recovery via email
+- Trip creation and management
+- Collaborative trip editing in real-time
+- Sharing trips (view-only or editable)
+- User profile management (change profile picture, change password)
+- Google Maps integration for place selection
 
 ## Installation
 ``` bash
@@ -102,10 +102,44 @@ docker build -t frontend-app . # not surre will check
 ```
 
 
+## Technologies Used
+- **Backend:** Node.js, Express, ES6 modules
+- **Frontend:** React (with Vite), TypeScript
+- **Database:** MongoDB
+- **Real-time Communication:** Socket.IO
+- **Caching:** Redis
+- **Containerization:** Docker
 
-## Technologies Used:
- - **Bakcend:** Node.js + express + ES6 modules
- - **Frontend:** Vite(React) + Typescript
+## Architecture
+
+```mermaid
+graph TD
+  subgraph Frontend
+    Frontend
+  end
+
+  subgraph Backend
+    Backend -- API requests --> Frontend
+    Backend -- Websocket events --> Socket.IO
+  end
+
+  subgraph Database
+    MongoDB
+  end
+
+  subgraph Caching
+    Redis
+  end
+
+  Frontend -- API requests --> Backend
+  Frontend -- Websocket connection --> Socket.IO
+  Backend -- Database connection --> MongoDB
+  Socket.IO -- Redis Adapter --> Redis
+```
+
+## API Documentation
+
+Go [here](backend/API_documentation.md) for API documentation
 
 ## Docker Containers:
  - **redis** - for better communication between containers (rn socketio and backend)
@@ -114,11 +148,10 @@ docker build -t frontend-app . # not surre will check
  - **backend** - server
  - **frontend** - client
 
-<details>
-<summary>
 
-## Structure:
-</summary>
+## Project Structure
+<details>
+<summary>see structure tree</summary>
 
 ```bash
   main-dir/
@@ -191,24 +224,49 @@ docker build -t frontend-app . # not surre will check
 
 ------------------------------------
 ## Contributing
-This project is primarily a personal learning exercise. However, if you spot any bugs or have suggestions for improvements, feel free to open an issue or submit a pull request. 
+This project is primarily a personal learning exercise. However, if you spot any bugs or have suggestions for improvements, feel free to open an issue or submit a pull request.  
 
 If you'd like to contribute:
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create your feature branch (git checkout -b feature/AmazingFeature)
+3. Commit your changes using conventional commit messages
+4. Run tests: npm test
+5. Push to the branch (git push origin feature/AmazingFeature)
+6. Open a Pull Request
 
-Please note that as this is a personal learning project, there might be some delay before branches being merged.
+We use Git for version control and follow the GitFlow workflow. Please ensure your code adheres to the project's coding standards and conventions.  
+
+Your pull requests will be reviewed, and there may be a delay in merging due to the personal nature of this project. However, we appreciate all contributions that help improve the codebase and enhance the learning experience.
 
 ## Licence
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+## Project Status and Roadmap
+
+Current Status: In active development
+
+Roadmap:
+- Implement user dashboard
+- Add trip statistics and analytics
+- Integrate with more external APIs for place information
+- Improve mobile responsiveness
+
+## Reporting Issues
+
+If you encounter any bugs or have feature requests, please open an issue on the GitHub repository. Provide as much detail as possible, including steps to reproduce the issue and your environment details.
+
+## External Services
+
+This project relies on the following external services:
+- Google Maps API for place selection and mapping
+- Brevo for email services
+
+Please ensure you have the necessary API keys and configurations for these services when setting up the project.
+
 
 ## TODO:
 - [ ] deployment
-- [ ] readme frontend
 
 - [ ] how to build only one container
 - [ ] change names of containers and mby links (localhost to server, client etc)
