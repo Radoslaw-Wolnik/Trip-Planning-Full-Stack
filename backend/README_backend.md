@@ -138,12 +138,7 @@ If you'd like to contribute to the backend of this project, please follow these 
 Your contributions will be reviewed, and we appreciate any improvements that help enhance the backend functionality and learning experience.
 
 ## TODO:
-- [ ] remove views
 - [ ] rename api index
-- [ ] enviorement variables check if work and are being managed properly
 - [ ] populateDB.js properly - mby make things using website and then export
-- [ ] https nisted of http
-- [ ] Mby change from JS to TS
 - [ ] check outdated node modules and install newer dependencies
-- [ ] make routine to delete revokedTokens
-- [ ] make routine to delete previous profile picture or delete previous ones on upload
+- [ ] delete previous profile picture on upload of a new one

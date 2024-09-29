@@ -5,17 +5,17 @@ Our API provides endpoints for user authentication, trip management, and real-ti
 ### Authentication
 
 #### Register a new user
-- **POST** `/users/register`
+- **POST** `/auth/register`
 - **Body**: `{ username, email, password }`
 - **Response**: `{ message: "User registered successfully" }`
 
 #### Login
-- **POST** `/users/login`
+- **POST** `/auth/login`
 - **Body**: `{ email, password }`
 - **Response**: `{ token: "JWT_TOKEN", user: { ... } }`
 
 #### Logout
-- **POST** `/users/logout`
+- **POST** `/auth/logout`
 - **Headers**: `Authorization: Bearer JWT_TOKEN`
 - **Response**: `{ message: "Logged out successfully" }`
 
