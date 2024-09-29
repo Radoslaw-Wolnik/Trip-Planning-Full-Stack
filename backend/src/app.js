@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 
-import userRoutes from './routes/userRoutes.js';
-import tripRoutes from './routes/tripRoutes.js';
+import userRoutes from './routes/user.routes.js';
+import tripRoutes from './routes/trip.routes.js';
+import authRoutes from './routes/auth.routes.js';
+
 import env from './config/environment.js'
 
 const app = express();
@@ -18,6 +20,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/api/users', userRoutes);
 app.use('/api/trips', tripRoutes);
+app.use('/api/auth', authRoutes);
 
 
 export default app;

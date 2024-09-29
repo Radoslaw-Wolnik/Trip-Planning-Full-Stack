@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   verificationToken: { type: String },
   verificationTokenExpires: Date,
+
+  lastTimeActive: Date,
+  deactivationToken: { type: String },
+  deactivationExpires: Date,
+  deactivated: Date || null,
   
   trips: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Trip' }]
 });
