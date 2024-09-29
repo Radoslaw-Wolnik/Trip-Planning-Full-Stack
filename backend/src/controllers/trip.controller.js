@@ -1,8 +1,8 @@
-import Trip from '../models/Trip.js';
-import User from '../models/User.js';
+import Trip from '../models/trip.model.js';
+import User from '../models/user.model.js';
 // it was an overkill to use crypto for invitation codes, insted we use helper function to generate them
 import crypto from 'crypto';
-import { generateInvitationCode } from '../utils/generateInvitationCode.js';
+import { generateInvitationCode } from '../utils/generate-inv-code.util.js';
 import { updateRealTimeStatus } from '../socketio/socketServer.js';
 
 import { createClient } from 'redis';

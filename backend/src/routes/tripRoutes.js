@@ -1,6 +1,6 @@
 // src/routes/tripRoutes.js
 import express from 'express';
-import authenticateToken from '../middleware/auth.js';
+import authenticateToken from '../middleware/auth.middleware.js';
 // import auth from '../middleware/auth.js';
 import { 
     createTrip, 
@@ -14,7 +14,7 @@ import {
     getTripDetails,
     joinTripEdit,
     leaveTripEdit
-} from '../controllers/tripController.js';
+} from '../controllers/trip.controller.js';
 
 
 const router = express.Router();

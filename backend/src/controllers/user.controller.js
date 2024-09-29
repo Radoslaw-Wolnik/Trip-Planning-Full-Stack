@@ -1,13 +1,13 @@
-import User from '../models/User.js';
+import User from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import env from '../config/environment.js';
 
 import crypto from 'crypto';
-import sendEmail from '../utils/sendEmail.js';
-import extractToken from '../utils/tokenExtractor.js';
+import sendEmail from '../services/email.service.js';
+import extractToken from '../utils/extract-token.util.js';
 
-import RevokedToken from '../models/RevokedToken.js';
+import RevokedToken from '../models/revoked-token.model.js';
 
 export const register = async (req, res) => {
   try {

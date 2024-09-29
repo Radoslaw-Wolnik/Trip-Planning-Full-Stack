@@ -9,8 +9,7 @@ const tripSchema = new mongoose.Schema({
     name: String,
     date: Date,
     latitude: Number,
-    longitude: Number,
-    order: Number
+    longitude: Number, // the order depends on actual order in the list
   }],
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

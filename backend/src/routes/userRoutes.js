@@ -1,8 +1,8 @@
 import express from 'express';
-import { register, login, logout, getUserProfile, uploadProfilePicture, changePassword, sendVerificationEmail, verifyEmail, getOtherUserProfile } from '../controllers/userController.js';
-import { getUserTrips } from '../controllers/tripController.js';
-import authenticateToken from '../middleware/auth.js';
-import upload from '../middleware/upload.js';
+import { register, login, logout, getUserProfile, uploadProfilePicture, changePassword, sendVerificationEmail, verifyEmail, getOtherUserProfile } from '../controllers/user.controller.js';
+import { getUserTrips } from '../controllers/trip.controller.js';
+import authenticateToken from '../middleware/auth.middleware.js';
+import upload from '../middleware/upload.middleware.js';
 
 const router = express.Router();
 

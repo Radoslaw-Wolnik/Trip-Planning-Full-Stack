@@ -2,8 +2,8 @@ import { Server } from 'socket.io';
 import http from 'http';
 // import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Trip from '../models/Trip.js';
-import connectDB from '../config/database.js';
+import Trip from '../models/trip.model.js';
+import connectDB from '../utils/db-connection.util.js';
 
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';

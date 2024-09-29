@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import env from './environment.js';
+import env from '../config/environment.js';
 
 // Function to connect to MongoDB
 const connectToMongoDB = async () => {

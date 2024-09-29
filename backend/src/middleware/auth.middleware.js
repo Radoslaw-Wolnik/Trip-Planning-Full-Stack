@@ -1,8 +1,8 @@
 // src/middleware/auth.js
 
 import jwt from 'jsonwebtoken';
-import RevokedToken from '../models/RevokedToken.js';
-import extractToken from '../utils/tokenExtractor.js';
+import RevokedToken from '../models/revoked-token.model.js';
+import extractToken from '../utils/extract-token.util.js';
 import env from '../config/environment.js'
 
 const authenticateToken = async (req, res, next) => {
