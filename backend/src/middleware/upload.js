@@ -3,7 +3,11 @@ import path from 'path';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    let uploadPath;
+    const userId = req.user?.id || 'anonymous';
+    uploadPath = `uploads/profile_pics/${userId}`
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     const userId = req.user.id;

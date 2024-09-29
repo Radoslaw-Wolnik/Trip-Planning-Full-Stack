@@ -44,7 +44,7 @@ export const register = async (req, res) => {
 
     await user.save();
 
-    const verificationUrl = `${env.FRONTEND}/verify-email/${verificationToken}`;
+    const verificationUrl = `${env.app.FRONTEND}/verify-email/${verificationToken}`;
     console.log('Attempting to send email to:', user.email);
     console.log('Verification URL:', verificationUrl);
     await sendEmail({
@@ -97,7 +97,7 @@ export const login = async (req, res) => {
       }
     };
 
-    jwt.sign(payload, env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+    jwt.sign(payload, env.auth.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
       res.json({ token });
     });
@@ -168,7 +168,7 @@ export const uploadProfilePicture = async (req, res) => {
     }
 
     // Store the relative path in the database
-    const relativePath = `/uploads/${req.file.filename}`;
+    const relativePath = `/uploads/profile_pics/${req.user.id}/${req.file.filename}`;
     user.profilePicture = relativePath;
     await user.save();
 
@@ -223,7 +223,7 @@ export const sendVerificationEmail = async (req, res) => {
     user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours from now
     await user.save();
 
-    const verificationUrl = `${env.FRONTEND}/verify-email/${verificationToken}`;
+    const verificationUrl = `${env.app.FRONTEND}/verify-email/${verificationToken}`;
     
     await sendEmail({
       to: user.email,
