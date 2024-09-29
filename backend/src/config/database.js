@@ -3,7 +3,7 @@ import env from './environment.js';
 
 // Function to connect to MongoDB
 const connectToMongoDB = async () => {
-  const dbURI = `mongodb://${env.DB_USER}:${env.DB_PASS}@${env.DB_HOST}/${env.DB_NAME}`;
+  const dbURI = env.database.uri;
   
   return mongoose.connect(dbURI, {
     useNewUrlParser: true,
@@ -28,6 +28,23 @@ const connectDB = async () => {
         process.exit(1);
       }
     }
+  }
+};
+
+// function for health check
+export const checkDBHealth = () => {
+  const dbStatus = mongoose.connection.readyState;
+  switch (dbStatus) {
+    case 0:
+      return 'Disconnected';
+    case 1:
+      return 'Connected';
+    case 2:
+      return 'Connecting';
+    case 3:
+      return 'Disconnecting';
+    default:
+      return 'Unknown';
   }
 };
 

@@ -3,6 +3,7 @@
 import jwt from 'jsonwebtoken';
 import RevokedToken from '../models/RevokedToken.js';
 import extractToken from '../utils/tokenExtractor.js';
+import env from '../config/environment.js'
 
 const authenticateToken = async (req, res, next) => {
   const token = extractToken(req);
@@ -18,7 +19,7 @@ const authenticateToken = async (req, res, next) => {
       return res.status(403).json({ message: 'Token has been revoked.' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.auth.JWT_SECRET);
     // req.user = decoded previously
     req.user =  { id: decoded.user.id }; // Ensure req.user has the correct user id;
     next();

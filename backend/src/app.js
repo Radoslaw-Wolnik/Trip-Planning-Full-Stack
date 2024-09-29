@@ -1,17 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 
 import userRoutes from './routes/userRoutes.js';
 import tripRoutes from './routes/tripRoutes.js';
-
-dotenv.config();
+import env from './config/environment.js'
 
 const app = express();
 
 // idk why but process.env.FRONTEND doesnt work but its not the most important thing
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: env.app.FRONTEND, //'http://localhost:5173',
     credentials: true,
   }));
 app.use(express.json());
