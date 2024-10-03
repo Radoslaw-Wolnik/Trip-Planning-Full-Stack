@@ -16,15 +16,6 @@ const storage = multer.diskStorage({
     if (file.fieldname === 'profilePicture') {
       const userId = req.user?.id || 'anonymous';
       uploadPath = `uploads/profile_pictures/${userId}`;
-    } else if (file.fieldname === 'productPictures') {
-      const productId = req.params.productId || 'temp'; // use temp if productID is not avaliable
-      uploadPath = `uploads/products/${productId}/`;
-    } else if (file.fieldname === 'disputeAttachments') {
-      const disputeId = req.params.disputeId || 'temp';
-      uploadPath = `uploads/disputes/${disputeId}/`;
-    } else if (file.fieldname === 'messagePhotos') {
-      const userId = req.user?.id || 'anonymous';
-      uploadPath = `uploads/messages/${userId}/`;
     } else {
       return cb(new Error('Invalid field name'), '');
     }
@@ -43,11 +34,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-  const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
+  const allowedMimes = ['image/jpeg', 'image/png'];
   if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new FileTypeNotAllowedError(['jpeg', 'png', 'gif', 'mp4', 'mov']));
+    cb(new FileTypeNotAllowedError(['jpeg', 'png',]));
   }
 };
 
@@ -56,7 +47,6 @@ export const upload = multer({
   fileFilter: fileFilter,
   limits: {
     fileSize: 50 * 1024 * 1024, // 50 MB
-    files: environment.product.maxPictures
   }
 });
 
