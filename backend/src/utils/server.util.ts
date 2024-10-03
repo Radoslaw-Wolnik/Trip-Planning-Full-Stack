@@ -27,3 +27,23 @@ export const gracefulShutdown = async (server: Server, exitCode: number) => {
     process.exit(1);
   }
 };
+
+/*
+
+export const gracefulShutdown = (server: Server) => {
+  logger.info('Received kill signal, shutting down gracefully');
+  server.close(() => {
+    logger.info('Closed out remaining connections');
+    mongoose.connection.close(false, () => {
+      logger.info('MongoDB connection closed');
+      process.exit(0);
+    });
+  });
+
+  setTimeout(() => {
+    logger.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 10000);
+};
+
+*/
