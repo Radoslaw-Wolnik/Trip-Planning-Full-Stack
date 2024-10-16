@@ -92,37 +92,6 @@ export const authenticateJWT = async (req: AuthRequest, res: Response, next: Nex
   }
 };
 
-export const handleAnonymousAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  const { token } = req.params;
-
-  if (!token) {
-    return next(new UnauthorizedError('No token provided'));
-  }
-
-  try {
-    const decoded = jwt.verify(token, environment.auth.jwtSecret) as { userId: string };
-    const user = await User.findById(decoded.userId);
-
-    if (!user) {
-      return next(new UnauthorizedError('Invalid token'));
-    }
-
-    if (!user.isAnonymous) {
-      return next(new UnauthorizedError('Token is not for an anonymous user'));
-    }
-
-    // Generate a new token for the anonymous user
-    const newToken = generateToken(user);
-    setTokenCookie(res, newToken);
-
-    // Attach the user to the request
-    req.user = user;
-
-    next();
-  } catch (error) {
-    next(new UnauthorizedError('Invalid or expired token'));
-  }
-};
 
 export const optionalAuthJWT = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
