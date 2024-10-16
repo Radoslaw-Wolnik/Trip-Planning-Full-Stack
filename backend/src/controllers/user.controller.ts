@@ -1,5 +1,5 @@
-import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/global';
+import { Response, NextFunction, Request } from 'express';
+// import { AuthRequest } from '../types/global';
 import User from '../models/user.model';
 import { NotFoundError, UnauthorizedError } from '../utils/custom-errors.util';
 import logger from '../utils/logger.util';
@@ -111,7 +111,7 @@ export const uploadProfilePicture = async (req: AuthRequestWithFile, res: Respon
     }
 
     // Store the relative path in the database
-    const relativePath = `/uploads/profile_pics/${req.user.id}/${req.file.filename}`;
+    const relativePath = `/uploads/users/${req.user.id}/${req.file.filename}`;
     user.profilePicture = relativePath;
     await user.save();
 

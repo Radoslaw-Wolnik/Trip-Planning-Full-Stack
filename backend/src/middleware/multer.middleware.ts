@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
     if (file.fieldname === 'profilePicture') {
       const userId = req.user?.id || 'anonymous';
-      uploadPath = `uploads/profile_pictures/${userId}`;
+      uploadPath = `uploads/users/${userId}`;
     } else {
       return cb(new Error('Invalid field name'), '');
     }
