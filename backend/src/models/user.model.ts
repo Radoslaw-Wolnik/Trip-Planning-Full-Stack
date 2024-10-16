@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail';
 
-export interface IUser extends Document {
+export interface IUserDocument extends Document {
   username: string;
   email: string;
   password: string;
@@ -15,10 +15,11 @@ export interface IUser extends Document {
   deactivationExpires?: Date;
   deactivated?: Date;
   trips: mongoose.Types.ObjectId[];
+  role: 'user' | 'admin';
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUserDocument>({
   username: {
     type: String,
     required: [true, 'Username is required'],
@@ -47,6 +48,7 @@ const userSchema = new Schema<IUser>({
   deactivationExpires: Date,
   deactivated: Date,
   trips: [{ type: Schema.Types.ObjectId, ref: 'Trip' }],
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
 
 userSchema.pre('save', async function (next) {
@@ -60,4 +62,4 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-export default mongoose.model<IUser>('User', userSchema);
+export default mongoose.model<IUserDocument>('User', userSchema);
