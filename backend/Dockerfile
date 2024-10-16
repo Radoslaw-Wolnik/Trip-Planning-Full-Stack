@@ -13,6 +13,28 @@ RUN npm ci
 # Copy the rest of the application files
 COPY . .
 
+# Test stage
+FROM node:20 AS test
+
+WORKDIR /app
+
+# Copy all files from the builder stage
+COPY --from=builder /app .
+
+# Install all dependencies including devDependencies
+RUN npm ci
+
+# Copy test configuration
+COPY jest.config.js .
+COPY tsconfig.json .
+
+# Set environment variable for testing
+ENV NODE_ENV=test
+
+# Command to run tests
+CMD ["npm", "test"]
+
+
 # Development stage
 FROM node:20 AS development
 
@@ -22,8 +44,8 @@ WORKDIR /app
 COPY --from=builder /app .
 
 # Copy additional development-specific configuration files
-COPY nodemon.json .
-COPY .env.development .env
+# COPY nodemon.json . insted of nodemon tsx --- it's better for ts
+
 
 # make uploads dir in development setup
 RUN mkdir -p /app/uploads
@@ -51,8 +73,6 @@ RUN npm ci --only=production
 # Copy source files from the builder stage
 COPY --from=builder /app/src ./src
 
-# Copy production environment configuration
-COPY .env.production .env
 
 # make uploads dir in production
 RUN mkdir -p /app/uploads
